@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Literacy of Love</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                 <a href="index.html">
+                    <img src="images/logo.jpg" alt="Literacy of Love Logo" class="logo-img">
+
+                <h2>Literacy of Love</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="areas-of-need.html" class="nav-link">Areas of Need</a></li>
+                <li class="nav-item"><a href="sponsorship.html" class="nav-link">Sponsorship</a></li>
+                <li class="nav-item"><a href="shop.html" class="nav-link">Shop</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                <li class="nav-item"><a href="donate.html" class="nav-link donate-btn">Donate</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="page-hero">
+        <div class="hero-overlay">
+            <div class="container">
+                <h1 class="page-title">Contact Us</h1>
+                <p class="page-subtitle">We'd love to hear from you</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Intro -->
+    <section class="contact-intro">
+        <div class="container">
+            <h2 class="section-title">Get in Touch</h2>
+            <p class="contact-description">We'd love to hear from you. If you're interested in getting involved or learning more, please send us a message. Whether you want to sponsor a child, volunteer, visit Uganda, or simply learn more about our mission, we're here to help.</p>
+        </div>
+    </section>
+
+    <!-- Contact Methods -->
+    <section class="contact-methods">
+        <div class="container">
+            <div class="methods-grid">
+                <div class="method-card">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Email Us</h3>
+                    <p>Send us a message and we'll get back to you as soon as possible</p>
+                    <a href="mailto:carimatejka1@gmail.com" class="contact-link">carimatejka1@gmail.com</a>
+                </div>
+                
+                <div class="method-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Visit Our Partners</h3>
+                    <p>Stop by Christie's Boutique in Olean, NY</p>
+                    <address>
+                        119 N. Union St<br>
+                        Olean, NY 14760
+                    </address>
+                </div>
+                
+                <div class="method-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Connect Socially</h3>
+                    <p>Follow us and join our community on social media</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/cari.matejka" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/literacyoflove/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/@carimatejka7178?si=GCaE2JGKwVd1XoYe" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.tiktok.com/@literacyoflove?_t=8l0rAn2XLig&_r=1" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section class="contact-form-section">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Send Us a Message</h2>
+                    <p>Fill out the form below and we'll get back to you soon</p>
+                </div>
+                
+                <form class="contact-form" id="contactForm" action="https://formsubmit.co/carimatejka1@gmail.com" method="POST">
+                    <!-- FormSubmit.co configuration -->
+                    <input type="hidden" name="_next" value="thank-you.html">
+                    <input type="hidden" name="_subject" value="New message from Literacy of Love website">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_captcha" value="true">
+                    <input type="hidden" name="_autoresponse" value="Thank you for your message! We'll get back to you soon.">
+                    <input type="hidden" name="_cc" value="carimatejka1@gmail.com">
+                    <input type="hidden" name="_replyto" value="carimatejka1@gmail.com">
+                    <input type="hidden" name="_format" value="html">
+                    
+                    <!-- Honeypot field to prevent spam -->
+                    <div style="display: none;">
+                        <input type="text" name="_honey" tabindex="-1" autocomplete="off">
+                    </div>
+                    
+                    <!-- Form validation messages -->
+                    <div id="formMessages" class="form-messages"></div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required>
+                            <span class="error-message" id="nameError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                            <span class="error-message" id="emailError"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                            <span class="error-message" id="phoneError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="interest">I'm Interested In</label>
+                            <select id="interest" name="interest">
+                                <option value="">Select an option</option>
+                                <option value="sponsorship">Child Sponsorship</option>
+                                <option value="volunteer">Volunteering</option>
+                                <option value="mission-trip">Mission Trip</option>
+                                <option value="educational-tour">Educational Tour</option>
+                                <option value="speaking">Speaking Engagement</option>
+                                <option value="partnership">Partnership</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" rows="6" required placeholder="Tell us how you'd like to get involved or any questions you have..."></textarea>
+                        <span class="error-message" id="messageError"></span>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span class="btn-text">Send Message</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Sending...
+                        </span>
+                    </button>
+                </form>
+                
+                <!-- Fallback contact method -->
+                <div class="form-fallback" style="margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; text-align: center;">
+                    <p style="margin-bottom: 1rem; color: #6c757d;">
+                        <i class="fas fa-info-circle"></i>
+                        Having trouble with the form? You can also email us directly:
+                    </p>
+                    <a href="mailto:carimatejka1@gmail.com?subject=Contact from Literacy of Love Website" class="btn btn-secondary">
+                        <i class="fas fa-envelope"></i>
+                        Email Directly
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ways to Get Involved -->
+    <section class="get-involved">
+        <div class="container">
+            <h2 class="section-title">Ways to Get Involved</h2>
+            
+            <div class="involvement-grid">
+                <div class="involvement-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Sponsor a Child</h3>
+                    <p>Make a direct impact by sponsoring a child's education. From $500/year for elementary to $1,500-$2,000 for university.</p>
+                    <a href="sponsorship.html" class="btn btn-secondary">Learn More</a>
+                </div>
+                
+                <div class="involvement-card">
+                    <i class="fas fa-plane"></i>
+                    <h3>Visit Uganda</h3>
+                    <p>Join us for a mission trip, educational tour, or community visit through NorthStar Tours.</p>
+                    <a href="https://NorthStarToursAndTravel.com" class="btn btn-secondary" target="_blank">Explore Tours</a>
+                </div>
+                
+                <div class="involvement-card">
+                    <i class="fas fa-church"></i>
+                    <h3>Speaking Engagements</h3>
+                    <p>Invite Cari to speak at your church, school, or organization about our mission and impact.</p>
+                    <a href="mailto:carimatejka1@gmail.com" class="btn btn-secondary">Book Cari</a>
+                </div>
+                
+                <div class="involvement-card">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>Shop with Purpose</h3>
+                    <p>Purchase authentic Ugandan crafts and products that support our sustainability projects.</p>
+                    <a href="shop.html" class="btn btn-secondary">Visit Shop</a>
+                </div>
+                
+                <div class="involvement-card">
+                    <i class="fas fa-share-alt"></i>
+                    <h3>Spread the Word</h3>
+                    <p>Share our story on social media and help us grow our network of supporters.</p>
+                    <a href="#" class="btn btn-secondary share-btn">Share Now</a>
+                </div>
+                
+                <div class="involvement-card">
+                    <i class="fas fa-birthday-cake"></i>
+                    <h3>Fundraise</h3>
+                    <p>Create a birthday fundraiser on Facebook or organize your own fundraising event.</p>
+                    <a href="https://www.facebook.com/literacyoflove" class="btn btn-secondary" target="_blank">Start Fundraising</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How do I sponsor a child?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>You can sponsor a child by contacting us directly. We'll match you with a child based on your preferences and budget. Sponsorship costs range from $500/year for elementary to $1,500-$2,000 for university students.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Can I visit the children I sponsor?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely! We encourage sponsors to visit through our NorthStar Tours program. You can meet your sponsored child, visit The Heart, and see our projects firsthand.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How much of my donation goes directly to the cause?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>100% of all donations go directly to the cause. There are no administrative fees or hidden costs. Cari volunteers her time, and all overhead is covered separately.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Can I communicate with my sponsored child?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! Cari facilitates letters and communication between sponsors and their children. She personally knows each child and helps develop special connections.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How can my church or school get involved?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Cari offers speaking engagements, mission moments, and educational programs for churches and schools. Contact us to learn about connecting kids across the world and supporting our mission.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Media Integration -->
+    <section class="social-integration">
+        <div class="container">
+            <h2 class="section-title">Follow Our Journey</h2>
+            <p class="social-description">Stay updated with our latest news, success stories, and impact through our social media channels</p>
+            
+            <div class="social-platforms">
+                <a href="https://www.facebook.com/cari.matejka" class="social-platform" target="_blank">
+                    <i class="fab fa-facebook"></i>
+                    <div class="platform-info">
+                        <h3>Cari's Facebook</h3>
+                        <p>Personal updates from our founder</p>
+                    </div>
+                </a>
+                
+                <a href="https://www.facebook.com/literacyoflove" class="social-platform" target="_blank">
+                    <i class="fab fa-facebook"></i>
+                    <div class="platform-info">
+                        <h3>Literacy of Love Facebook</h3>
+                        <p>Organization updates and stories</p>
+                    </div>
+                </a>
+                
+                <a href="https://www.instagram.com/literacyoflove/" class="social-platform" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                    <div class="platform-info">
+                        <h3>Instagram</h3>
+                        <p>Photos from Uganda and daily life</p>
+                    </div>
+                </a>
+                
+                <a href="https://youtube.com/@carimatejka7178?si=GCaE2JGKwVd1XoYe" class="social-platform" target="_blank">
+                    <i class="fab fa-youtube"></i>
+                    <div class="platform-info">
+                        <h3>YouTube</h3>
+                        <p>Videos and documentaries</p>
+                    </div>
+                </a>
+                
+                <a href="https://www.tiktok.com/@literacyoflove?_t=8l0rAn2XLig&_r=1" class="social-platform" target="_blank">
+                    <i class="fab fa-tiktok"></i>
+                    <div class="platform-info">
+                        <h3>TikTok</h3>
+                        <p>Quick updates and behind-the-scenes</p>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="northstar-social">
+                <h3>NorthStar Tours Social Media</h3>
+                <div class="northstar-links">
+                    <a href="https://www.instagram.com/northstartoursuganda/" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                        NorthStar Instagram
+                    </a>
+                    <a href="https://www.facebook.com/NorthStarUganda/" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                        NorthStar Facebook
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Make a Difference?</h2>
+            <p>Contact us today and join our family of supporters transforming lives in Uganda</p>
+            <div class="cta-buttons">
+                <a href="mailto:carimatejka1@gmail.com" class="btn btn-primary">
+                    <i class="fas fa-envelope"></i>
+                    Email Us Now
+                </a>
+                <a href="sponsorship.html" class="btn btn-secondary">
+                    <i class="fas fa-heart"></i>
+                    Start Sponsoring
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Literacy of Love</h3>
+                    <p>Transforming lives through education, one child at a time.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/cari.matejka" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/literacyoflove/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/@carimatejka7178?si=GCaE2JGKwVd1XoYe" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.tiktok.com/@literacyoflove?_t=8l0rAn2XLig&_r=1" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="areas-of-need.html">Areas of Need</a></li>
+                        <li><a href="sponsorship.html">Sponsorship</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>For more information about our mission and how you can help, please reach out to us.</p>
+                    <a href="mailto:carimatejka1@gmail.com" class="contact-email">carimatejka1@gmail.com</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Literacy of Love. All rights reserved. | 100% of donations go directly to the cause.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Contact form functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contactForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const formMessages = document.getElementById('formMessages');
+            
+            // Debug: Log form configuration
+            console.log('Contact form initialized');
+            console.log('Form action:', contactForm.action);
+            console.log('Form method:', contactForm.method);
+            
+            // Form validation
+            function validateForm() {
+                let isValid = true;
+                const errors = {};
+                
+                // Clear previous error messages
+                clearErrors();
+                
+                // Validate name
+                const name = document.getElementById('name').value.trim();
+                if (!name) {
+                    errors.name = 'Full name is required';
+                    isValid = false;
+                } else if (name.length < 2) {
+                    errors.name = 'Name must be at least 2 characters long';
+                    isValid = false;
+                }
+                
+                // Validate email
+                const email = document.getElementById('email').value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email) {
+                    errors.email = 'Email address is required';
+                    isValid = false;
+                } else if (!emailRegex.test(email)) {
+                    errors.email = 'Please enter a valid email address';
+                    isValid = false;
+                }
+                
+                // Validate phone (optional but if provided, must be valid)
+                const phone = document.getElementById('phone').value.trim();
+                if (phone) {
+                    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+                    if (!phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''))) {
+                        errors.phone = 'Please enter a valid phone number';
+                        isValid = false;
+                    }
+                }
+                
+                // Validate message
+                const message = document.getElementById('message').value.trim();
+                if (!message) {
+                    errors.message = 'Message is required';
+                    isValid = false;
+                } else if (message.length < 10) {
+                    errors.message = 'Message must be at least 10 characters long';
+                    isValid = false;
+                }
+                
+                // Check honeypot field
+                const honey = document.querySelector('input[name="_honey"]').value;
+                if (honey) {
+                    // If honeypot is filled, it's likely spam
+                    console.log('Potential spam detected - honeypot field filled');
+                    isValid = false;
+                }
+                
+                // Display errors if any
+                if (!isValid) {
+                    displayErrors(errors);
+                }
+                
+                return isValid;
+            }
+            
+            function displayErrors(errors) {
+                Object.keys(errors).forEach(field => {
+                    const errorElement = document.getElementById(field + 'Error');
+                    if (errorElement) {
+                        errorElement.textContent = errors[field];
+                        errorElement.style.display = 'block';
+                    }
+                });
+            }
+            
+            function clearErrors() {
+                const errorElements = document.querySelectorAll('.error-message');
+                errorElements.forEach(element => {
+                    element.textContent = '';
+                    element.style.display = 'none';
+                });
+            }
+            
+            function showMessage(message, type) {
+                formMessages.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+                formMessages.style.display = 'block';
+                
+                // Auto-hide success messages after 5 seconds
+                if (type === 'success') {
+                    setTimeout(() => {
+                        formMessages.style.display = 'none';
+                    }, 5000);
+                }
+            }
+            
+            function setLoadingState(loading) {
+                const btnText = submitBtn.querySelector('.btn-text');
+                const btnLoading = submitBtn.querySelector('.btn-loading');
+                
+                if (loading) {
+                    btnText.style.display = 'none';
+                    btnLoading.style.display = 'inline';
+                    submitBtn.disabled = true;
+                } else {
+                    btnText.style.display = 'inline';
+                    btnLoading.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+            }
+            
+            // Form submission
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!validateForm()) {
+                    return;
+                }
+                
+                setLoadingState(true);
+                showMessage('Sending your message...', 'info');
+                
+                // Submit form using FormSubmit.co
+                const formData = new FormData(contactForm);
+                
+                // Add a timeout to handle slow responses
+                const timeoutDuration = 30000; // 30 seconds
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error('Request timeout')), timeoutDuration);
+                });
+                
+                Promise.race([
+                    fetch(contactForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    }),
+                    timeoutPromise
+                ])
+                .then(response => {
+                    if (response.ok) {
+                        showMessage('Message sent successfully! Redirecting to thank you page...', 'success');
+                        // Redirect to thank you page after a short delay
+                        setTimeout(() => {
+                            window.location.href = 'thank-you.html';
+                        }, 2000);
+                    } else {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Form submission error:', error);
+                    
+                    let errorMessage = 'There was an error sending your message. ';
+                    
+                    if (error.message.includes('timeout')) {
+                        errorMessage += 'The request timed out. ';
+                    } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                        errorMessage += 'Network error occurred. ';
+                    } else if (error.message.includes('HTTP 429')) {
+                        errorMessage += 'Too many requests. Please try again later. ';
+                    } else if (error.message.includes('HTTP 403')) {
+                        errorMessage += 'Access denied. The form service may be temporarily unavailable. ';
+                    }
+                    
+                    errorMessage += 'Please try again or email us directly at carimatejka1@gmail.com';
+                    
+                    showMessage(errorMessage, 'error');
+                    
+                    // Show fallback option more prominently
+                    const fallback = document.querySelector('.form-fallback');
+                    if (fallback) {
+                        fallback.classList.add('highlighted');
+                    }
+                })
+                .finally(() => {
+                    setLoadingState(false);
+                });
+            });
+            
+            // Real-time validation
+            const inputs = contactForm.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                
+                input.addEventListener('input', function() {
+                    // Clear error when user starts typing
+                    const errorElement = document.getElementById(this.id + 'Error');
+                    if (errorElement) {
+                        errorElement.textContent = '';
+                        errorElement.style.display = 'none';
+                    }
+                });
+            });
+            
+            function validateField(field) {
+                const errorElement = document.getElementById(field.id + 'Error');
+                if (!errorElement) return;
+                
+                let error = '';
+                
+                switch (field.id) {
+                    case 'name':
+                        if (!field.value.trim()) {
+                            error = 'Full name is required';
+                        } else if (field.value.trim().length < 2) {
+                            error = 'Name must be at least 2 characters long';
+                        }
+                        break;
+                        
+                    case 'email':
+                        if (!field.value.trim()) {
+                            error = 'Email address is required';
+                        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim())) {
+                            error = 'Please enter a valid email address';
+                        }
+                        break;
+                        
+                    case 'phone':
+                        if (field.value.trim()) {
+                            const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+                            if (!phoneRegex.test(field.value.trim().replace(/[\s\-\(\)]/g, ''))) {
+                                error = 'Please enter a valid phone number';
+                            }
+                        }
+                        break;
+                        
+                    case 'message':
+                        if (!field.value.trim()) {
+                            error = 'Message is required';
+                        } else if (field.value.trim().length < 10) {
+                            error = 'Message must be at least 10 characters long';
+                        }
+                        break;
+                }
+                
+                if (error) {
+                    errorElement.textContent = error;
+                    errorElement.style.display = 'block';
+                } else {
+                    errorElement.textContent = '';
+                    errorElement.style.display = 'none';
+                }
+            }
+        });
+        
+        // FAQ functionality
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const faqItem = button.parentElement;
+                const answer = faqItem.querySelector('.faq-answer');
+                const icon = button.querySelector('.fas');
+                
+                // Toggle active class
+                faqItem.classList.toggle('active');
+                
+                // Rotate icon
+                if (faqItem.classList.contains('active')) {
+                    icon.style.transform = 'rotate(180deg)';
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                } else {
+                    icon.style.transform = 'rotate(0deg)';
+                    answer.style.maxHeight = '0';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
