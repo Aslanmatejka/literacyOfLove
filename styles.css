@@ -2095,6 +2095,11 @@ body {
     .vision-card {
         padding: 2rem;
     }
+
+    .product-image {
+        object-align: center;
+    
+    }
 }
 
 /* Smooth scrolling */
