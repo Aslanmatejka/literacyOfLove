@@ -2127,7 +2127,3 @@ img:not([src]) {
     outline-offset: 2px;
 }
 
-p{
-    text-align: justify;
-    hythen: auto;
-}
