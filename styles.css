@@ -2123,3 +2123,6 @@ img:not([src]) {
     outline: 2px solid #4a90e2;
     outline-offset: 2px;
 }
+p{
+    text-align: justify;
+}
