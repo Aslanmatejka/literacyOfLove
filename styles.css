@@ -9,7 +9,9 @@ body {
     line-height: 1.6;
     color: #333;
     overflow-x: hidden;
-    display: block;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 
 }
 
