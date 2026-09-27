@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "day_start_hour": 6.0,
+    "day_end_hour": 20.0,
+    "fps": 24,
+    "frames_per_hour": 90,
+    "description": "School-day timeline: clock hours map to frames via (hour - day_start) * frames_per_hour + 1. Higher frames_per_hour = smoother travel."
+  },
+  "locations": {
+    "Home": {"empty": "LOC_Home", "label": "Home"},
+    "School": {"empty": "LOC_School", "label": "School"},
+    "Farm": {"empty": "LOC_Farm", "label": "Farm"},
+    "Shops": {"empty": "LOC_Shops", "label": "Shops"},
+    "Wood": {"empty": "LOC_Wood", "label": "Fetching Wood"},
+    "Well": {"empty": "LOC_Well", "label": "Water Well"}
+  },
+  "kids": [
+    {
+      "id": "kid_01",
+      "name": "Amina",
+      "color": [0.92, 0.35, 0.28, 1.0],
+      "events": [
+        {"time": "06:00", "location": "Home", "activity": "Wake / morning chores", "type": "hold"},
+        {"time": "06:30", "location": "Well", "activity": "Travel to well", "type": "travel"},
+        {"time": "06:45", "location": "Well", "activity": "Fetch water", "type": "hold"},
+        {"time": "07:15", "location": "Home", "activity": "Return with water", "type": "travel"},
+        {"time": "07:30", "location": "Home", "activity": "Prepare for school", "type": "hold"},
+        {"time": "08:00", "location": "School", "activity": "Walk to school", "type": "travel"},
+        {"time": "08:20", "location": "School", "activity": "Classes", "type": "hold"},
+        {"time": "13:00", "location": "Home", "activity": "Walk home for lunch", "type": "travel"},
+        {"time": "13:20", "location": "Home", "activity": "Lunch", "type": "hold"},
+        {"time": "14:00", "location": "Farm", "activity": "Walk to farm", "type": "travel"},
+        {"time": "14:20", "location": "Farm", "activity": "Help on farm", "type": "hold"},
+        {"time": "16:00", "location": "Wood", "activity": "Walk to woods", "type": "travel"},
+        {"time": "16:25", "location": "Wood", "activity": "Gather wood", "type": "hold"},
+        {"time": "17:30", "location": "Shops", "activity": "Walk to shops", "type": "travel"},
+        {"time": "17:50", "location": "Shops", "activity": "Errands / market", "type": "hold"},
+        {"time": "19:00", "location": "Home", "activity": "Walk home", "type": "travel"},
+        {"time": "19:20", "location": "Home", "activity": "Evening at home", "type": "hold"}
+      ]
+    },
+    {
+      "id": "kid_02",
+      "name": "Kofi",
+      "color": [0.25, 0.55, 0.95, 1.0],
+      "events": [
+        {"time": "06:00", "location": "Home", "activity": "Wake / morning chores", "type": "hold"},
+        {"time": "06:20", "location": "Wood", "activity": "Walk to woods", "type": "travel"},
+        {"time": "06:40", "location": "Wood", "activity": "Gather kindling", "type": "hold"},
+        {"time": "07:20", "location": "Home", "activity": "Return with wood", "type": "travel"},
+        {"time": "07:40", "location": "Home", "activity": "Prepare for school", "type": "hold"},
+        {"time": "08:00", "location": "School", "activity": "Walk to school", "type": "travel"},
+        {"time": "08:20", "location": "School", "activity": "Classes", "type": "hold"},
+        {"time": "13:00", "location": "Home", "activity": "Walk home for lunch", "type": "travel"},
+        {"time": "13:20", "location": "Home", "activity": "Lunch", "type": "hold"},
+        {"time": "14:00", "location": "Well", "activity": "Walk to well", "type": "travel"},
+        {"time": "14:20", "location": "Well", "activity": "Fetch afternoon water", "type": "hold"},
+        {"time": "14:50", "location": "Farm", "activity": "Walk to farm", "type": "travel"},
+        {"time": "15:15", "location": "Farm", "activity": "Help on farm", "type": "hold"},
+        {"time": "17:00", "location": "Shops", "activity": "Walk to shops", "type": "travel"},
+        {"time": "17:25", "location": "Shops", "activity": "Help at market", "type": "hold"},
+        {"time": "18:30", "location": "Home", "activity": "Walk home", "type": "travel"},
+        {"time": "18:50", "location": "Home", "activity": "Evening at home", "type": "hold"}
+      ]
+    },
+    {
+      "id": "kid_03",
+      "name": "Sena",
+      "color": [0.25, 0.78, 0.45, 1.0],
+      "events": [
+        {"time": "06:00", "location": "Home", "activity": "Wake / morning chores", "type": "hold"},
+        {"time": "06:40", "location": "Well", "activity": "Walk to well", "type": "travel"},
+        {"time": "07:00", "location": "Well", "activity": "Fetch water", "type": "hold"},
+        {"time": "07:25", "location": "Home", "activity": "Return with water", "type": "travel"},
+        {"time": "07:45", "location": "Home", "activity": "Prepare for school", "type": "hold"},
+        {"time": "08:05", "location": "School", "activity": "Walk to school", "type": "travel"},
+        {"time": "08:25", "location": "School", "activity": "Classes", "type": "hold"},
+        {"time": "12:45", "location": "Shops", "activity": "Walk to shops", "type": "travel"},
+        {"time": "13:10", "location": "Shops", "activity": "Buy lunch goods", "type": "hold"},
+        {"time": "13:40", "location": "Home", "activity": "Walk home", "type": "travel"},
+        {"time": "14:00", "location": "Home", "activity": "Lunch", "type": "hold"},
+        {"time": "14:30", "location": "Farm", "activity": "Walk to farm", "type": "travel"},
+        {"time": "14:50", "location": "Farm", "activity": "Tend crops", "type": "hold"},
+        {"time": "16:30", "location": "Wood", "activity": "Walk to woods", "type": "travel"},
+        {"time": "16:55", "location": "Wood", "activity": "Gather wood", "type": "hold"},
+        {"time": "18:00", "location": "Home", "activity": "Walk home", "type": "travel"},
+        {"time": "18:25", "location": "Home", "activity": "Evening at home", "type": "hold"}
+      ]
+    }
+  ]
+}

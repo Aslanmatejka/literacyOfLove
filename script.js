@@ -1,291 +1,338 @@
-// Mobile Navigation Toggle
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
+/* ---------- Helpers ---------- */
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
+/* ---------- Mobile Navigation Drawer ---------- */
+const hamburger = $('.hamburger');
+const navMenu = $('.nav-menu');
+let navBackdrop = null;
+let scrollY = 0;
 
-// Close mobile menu when clicking on a link
-document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+function openMenu() {
+    if (!hamburger || !navMenu) return;
+    scrollY = window.scrollY;
+    hamburger.classList.add('active');
+    navMenu.classList.add('active');
+    document.body.classList.add('menu-open');
+    hamburger.setAttribute('aria-expanded', 'true');
+    document.body.style.top = `-${scrollY}px`;
+    const closeBtn = navMenu.querySelector('.nav-menu__close');
+    if (closeBtn) setTimeout(() => closeBtn.focus(), 100);
+}
+
+function closeMenu() {
+    if (!hamburger || !navMenu) return;
     hamburger.classList.remove('active');
     navMenu.classList.remove('active');
-}));
+    document.body.classList.remove('menu-open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.body.style.top = '';
+    window.scrollTo(0, scrollY);
+}
 
-// Navbar scroll effect
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 50) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-        navbar.style.boxShadow = 'none';
+function toggleMenu(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!navMenu) return;
+    navMenu.classList.contains('active') ? closeMenu() : openMenu();
+}
+
+if (hamburger && navMenu) {
+    const navContainer = $('.nav-container');
+    const MOBILE_BP = window.matchMedia('(max-width: 900px)');
+
+    navMenu.setAttribute('id', 'primary-menu');
+    hamburger.setAttribute('aria-controls', 'primary-menu');
+
+    /* Portal drawer to body on mobile only (escapes navbar blur stacking) */
+    function placeNavMenu(isMobile) {
+        if (isMobile) {
+            if (navMenu.parentElement !== document.body) {
+                document.body.appendChild(navMenu);
+            }
+        } else {
+            closeMenu();
+            if (navContainer && navMenu.parentElement !== navContainer) {
+                navContainer.insertBefore(navMenu, hamburger);
+            }
+        }
     }
+    placeNavMenu(MOBILE_BP.matches);
+    MOBILE_BP.addEventListener('change', (e) => placeNavMenu(e.matches));
+
+    /* Drawer header with close button */
+    if (!navMenu.querySelector('.nav-menu__head')) {
+        const head = document.createElement('li');
+        head.className = 'nav-menu__head';
+        head.innerHTML = `
+            <span class="nav-menu__brand">Literacy of Love</span>
+            <button class="nav-menu__close" type="button" aria-label="Close menu">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        `;
+        navMenu.insertBefore(head, navMenu.firstChild);
+        head.querySelector('.nav-menu__close').addEventListener('click', (e) => {
+            e.preventDefault();
+            closeMenu();
+        });
+    }
+
+    /* Backdrop overlay */
+    navBackdrop = document.querySelector('.nav-backdrop');
+    if (!navBackdrop) {
+        navBackdrop = document.createElement('div');
+        navBackdrop.className = 'nav-backdrop';
+        navBackdrop.setAttribute('aria-hidden', 'true');
+        document.body.insertBefore(navBackdrop, navMenu);
+    }
+    navBackdrop.addEventListener('click', closeMenu);
+
+    hamburger.addEventListener('click', toggleMenu);
+}
+
+/* Close drawer when a nav link is tapped */
+document.addEventListener('click', (e) => {
+    const link = e.target.closest('.nav-menu .nav-link');
+    if (link) closeMenu();
 });
 
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+/* ---------- Active nav link based on current page ---------- */
+(function highlightActiveNav() {
+    const path = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
+    const pageKey = path === 'index' ? 'home' : path;
+    $$('.nav-link').forEach(link => {
+        if (link.dataset.page === pageKey) {
+            link.classList.add('is-active');
+            link.setAttribute('aria-current', 'page');
+        }
+    });
+})();
+
+/* ---------- Navbar scroll effect ---------- */
+const navbar = $('.navbar');
+let lastScrollY = window.scrollY;
+window.addEventListener('scroll', () => {
+    if (!navbar) return;
+    navbar.classList.toggle('scrolled', window.scrollY > 30);
+    lastScrollY = window.scrollY;
+}, { passive: true });
+
+/* ---------- Smooth scrolling for in-page anchors ---------- */
+$$('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href === '#' || href.length < 2) return;
+        const target = document.querySelector(href);
+        if (!target) return;
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            const headerHeight = document.querySelector('.navbar').offsetHeight;
-            const targetPosition = target.offsetTop - headerHeight;
-            
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
+        const headerHeight = navbar ? navbar.offsetHeight : 0;
+        window.scrollTo({
+            top: target.offsetTop - headerHeight - 8,
+            behavior: 'smooth'
+        });
     });
 });
 
-// Intersection Observer for animations
-const observeElements = document.querySelectorAll('.cta-item, .solution-item, .action-card, .mission-card, .vision-card');
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-});
-
-// Initial setup for animation elements
-observeElements.forEach((el) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(el);
-});
-
-// Share functionality
-const shareBtn = document.querySelector('.share-btn');
+/* ---------- Share button ---------- */
+const shareBtn = $('.share-btn');
 if (shareBtn) {
     shareBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        
+        const shareData = {
+            title: 'Literacy of Love — Transforming Lives Through Education',
+            text: 'Help us transform lives through education. Every ounce of love causes a ripple of change.',
+            url: window.location.href
+        };
         if (navigator.share) {
-            navigator.share({
-                title: 'Literacy of Love - Transforming Lives Through Education',
-                text: 'Help us transform lives through education. Every ounce of love causes a ripple of change.',
-                url: window.location.href
-            }).catch(console.error);
+            navigator.share(shareData).catch(() => {});
+        } else if (navigator.clipboard) {
+            navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`)
+                .then(() => showNotification('Link copied to clipboard'))
+                .catch(() => showNotification('Could not copy link'));
         } else {
-            // Fallback for browsers that don't support Web Share API
-            const text = 'Help transform lives through education with Literacy of Love! Every ounce of love causes a ripple of change. Visit: ' + window.location.href;
-            
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showNotification('Link copied to clipboard!');
-                });
-            } else {
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                showNotification('Link copied to clipboard!');
-            }
+            const ta = document.createElement('textarea');
+            ta.value = `${shareData.text} ${shareData.url}`;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); showNotification('Link copied to clipboard'); }
+            catch { showNotification('Could not copy link'); }
+            document.body.removeChild(ta);
         }
     });
 }
 
-// Notification function
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: #4a90e2;
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 5px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        z-index: 10000;
-        transform: translateX(400px);
-        transition: transform 0.3s ease;
-    `;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
+/* ---------- Notifications (toast) ---------- */
+function showNotification(message, type = 'info') {
+    const n = document.createElement('div');
+    n.className = `toast toast--${type}`;
+    n.setAttribute('role', 'status');
+    n.innerHTML = `<i class="fas fa-circle-check" aria-hidden="true"></i><span>${message}</span>`;
+    document.body.appendChild(n);
+    requestAnimationFrame(() => n.classList.add('toast--show'));
     setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-    }, 100);
-    
-    setTimeout(() => {
-        notification.style.transform = 'translateX(400px)';
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
+        n.classList.remove('toast--show');
+        setTimeout(() => n.remove(), 320);
+    }, 3200);
 }
 
-// Donate button functionality
-document.querySelectorAll('a[href="#donate"]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        showNotification('Donation functionality would be implemented here with a secure payment processor.');
-    });
-});
+/* Inject toast styles if not already present (defensive — also defined in CSS) */
+(function ensureToastStyles() {
+    if (document.getElementById('lol-toast-styles')) return;
+    const css = `
+        .toast{position:fixed;top:96px;right:20px;display:inline-flex;align-items:center;gap:.6rem;
+            background:#0f1b2d;color:#fff;padding:.8rem 1.1rem;border-radius:14px;
+            box-shadow:0 12px 32px rgba(15,27,45,.25);font-weight:500;font-size:.95rem;
+            transform:translateX(140%);transition:transform .32s cubic-bezier(.2,.7,.2,1);z-index:10000;
+            border:1px solid rgba(255,255,255,.08);max-width:calc(100vw - 40px);}
+        .toast i{color:#f0c878}
+        .toast--show{transform:translateX(0)}`;
+    const style = document.createElement('style');
+    style.id = 'lol-toast-styles';
+    style.textContent = css;
+    document.head.appendChild(style);
+})();
 
-// Loading animation for images
+/* ---------- Reveal on scroll ---------- */
 document.addEventListener('DOMContentLoaded', () => {
-    const images = document.querySelectorAll('img');
-    images.forEach(img => {
-        img.addEventListener('load', () => {
-            img.style.opacity = '1';
-        });
-        
-        img.addEventListener('error', () => {
-            // Handle broken images gracefully
-            console.log('Image failed to load:', img.src);
-        });
-    });
-});
+    const revealTargets = $$(
+        '.cta-item, .solution-item, .action-card, .mission-card, .vision-card, ' +
+        '.leader-card, .goal-card, .need-item, .method-card, .level-card, ' +
+        '.plan-card, .included-item, .step, .impact-card, .category-card, ' +
+        '.tour-card, .story-image, .letter-container, .section-title, ' +
+        '.section-head, .stat-block, .donate-card, .involvement-card, ' +
+        '.partner-card, .stat, .thanks-card'
+    );
+    revealTargets.forEach(el => el.classList.add('reveal'));
 
-// Parallax effect for hero section
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    if (hero) {
-        const rate = scrolled * -0.5;
-        hero.style.transform = `translateY(${rate}px)`;
+    if (!('IntersectionObserver' in window)) {
+        revealTargets.forEach(el => el.classList.add('in-view'));
+        return;
     }
-});
-
-// Counter animation for statistics (if you want to add any numbers)
-function animateCounter(element, target, duration = 2000) {
-    let start = 0;
-    const increment = target / (duration / 16);
-    const timer = setInterval(() => {
-        start += increment;
-        element.textContent = Math.floor(start);
-        if (start >= target) {
-            element.textContent = target;
-            clearInterval(timer);
-        }
-    }, 16);
-}
-
-// Form validation (if you add contact forms later)
-function validateForm(form) {
-    const inputs = form.querySelectorAll('input[required], textarea[required]');
-    let isValid = true;
-    
-    inputs.forEach(input => {
-        if (!input.value.trim()) {
-            input.style.borderColor = '#ff6b6b';
-            isValid = false;
-        } else {
-            input.style.borderColor = '#ddd';
-        }
-    });
-    
-    return isValid;
-}
-
-// Newsletter subscription (placeholder)
-function subscribeNewsletter(email) {
-    // This would integrate with your email service
-    console.log('Newsletter subscription for:', email);
-    showNotification('Thank you for subscribing to our newsletter!');
-}
-
-// Social media sharing functions
-function shareOnFacebook() {
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent('Help transform lives through education with Literacy of Love!');
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank');
-}
-
-function shareOnTwitter() {
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent('Help transform lives through education with Literacy of Love! Every ounce of love causes a ripple of change.');
-    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
-}
-
-// Accessibility improvements
-document.addEventListener('keydown', (e) => {
-    // ESC key closes mobile menu
-    if (e.key === 'Escape') {
-        hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
-    }
-});
-
-// Focus trap for mobile menu
-const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-
-function trapFocus(element) {
-    const focusables = element.querySelectorAll(focusableElements);
-    const firstFocusable = focusables[0];
-    const lastFocusable = focusables[focusables.length - 1];
-
-    element.addEventListener('keydown', (e) => {
-        if (e.key === 'Tab') {
-            if (e.shiftKey) {
-                if (document.activeElement === firstFocusable) {
-                    lastFocusable.focus();
-                    e.preventDefault();
-                }
-            } else {
-                if (document.activeElement === lastFocusable) {
-                    firstFocusable.focus();
-                    e.preventDefault();
-                }
-            }
-        }
-    });
-}
-
-// Initialize focus trap when mobile menu is active
-const navMenuElement = document.querySelector('.nav-menu');
-if (navMenuElement) {
-    trapFocus(navMenuElement);
-}
-
-// Lazy loading for images (modern browsers)
-if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
+    const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.classList.remove('lazy');
-                observer.unobserve(img);
+                entry.target.classList.add('in-view');
+                obs.unobserve(entry.target);
             }
         });
-    });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealTargets.forEach(el => observer.observe(el));
+});
 
-    document.querySelectorAll('img[data-src]').forEach(img => {
-        imageObserver.observe(img);
-    });
+/* ---------- Animated counters ---------- */
+function animateCounter(el, target, duration = 1600) {
+    const start = performance.now();
+    function frame(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(target * eased).toString();
+        if (t < 1) requestAnimationFrame(frame);
+        else el.textContent = String(target);
+    }
+    requestAnimationFrame(frame);
 }
 
-// Page load animation
+document.addEventListener('DOMContentLoaded', () => {
+    const statsStrip = $('.stats-strip');
+    const counters = $$('[data-count-to]');
+    if (!counters.length) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) return; /* HTML already shows final numbers */
+
+    let animated = false;
+    function runCounters() {
+        if (animated) return;
+        animated = true;
+        counters.forEach(el => {
+            const target = parseInt(el.dataset.countTo, 10);
+            if (Number.isNaN(target)) return;
+            el.textContent = '0';
+            animateCounter(el, target);
+        });
+    }
+
+    if (!statsStrip || !('IntersectionObserver' in window)) return;
+
+    const obs = new IntersectionObserver((entries) => {
+        if (entries.some(e => e.isIntersecting)) {
+            runCounters();
+            obs.disconnect();
+        }
+    }, { threshold: 0.15, rootMargin: '0px 0px -20px 0px' });
+
+    obs.observe(statsStrip);
+
+    /* Stats visible on load (e.g. short screens) — animate immediately */
+    requestAnimationFrame(() => {
+        const rect = statsStrip.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.85) runCounters();
+    });
+});
+
+/* ---------- Image loaded class (for fade in) ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+    $$('img').forEach(img => {
+        if (img.complete) img.classList.add('loaded');
+        else img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+    });
+});
+
+/* ---------- Accessibility: ESC closes mobile menu ---------- */
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+});
+
+/* ---------- FAQ accordion (contact page) ---------- */
+$$('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const answer = item.querySelector('.faq-answer');
+        const isOpen = item.classList.toggle('open');
+        if (answer) answer.style.maxHeight = isOpen ? answer.scrollHeight + 'px' : '0';
+        const icon = btn.querySelector('i');
+        if (icon) icon.style.transform = isOpen ? 'rotate(180deg)' : '';
+    });
+});
+
+/* ---------- Sticky mobile donate CTA ---------- */
+(function setupMobileCTA() {
+    const path = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
+    const isDonatePage = path === 'donate';
+    if (isDonatePage) {
+        document.body.classList.add('is-donate-page');
+        return;
+    }
+    document.body.classList.add('has-mobile-cta');
+
+    const bar = document.createElement('div');
+    bar.className = 'mobile-cta';
+    bar.setAttribute('role', 'region');
+    bar.setAttribute('aria-label', 'Quick donate');
+    bar.innerHTML = `
+        <div class="mobile-cta__inner">
+            <div class="mobile-cta__text">
+                Support a child today
+                <small>100% goes directly to the cause</small>
+            </div>
+            <a href="donate.html" class="btn btn-primary">
+                <i class="fas fa-heart" aria-hidden="true"></i>
+                Donate
+            </a>
+        </div>
+    `;
+    document.body.appendChild(bar);
+
+    /* Show after the user scrolls past the first viewport */
+    const reveal = () => {
+        const trigger = Math.max(window.innerHeight * 0.6, 320);
+        bar.classList.toggle('is-visible', window.scrollY > trigger);
+    };
+    window.addEventListener('scroll', reveal, { passive: true });
+    reveal();
+})();
+
+/* ---------- Page load ---------- */
 window.addEventListener('load', () => {
     document.body.classList.add('loaded');
 });
-
-// Preloader (optional)
-window.addEventListener('load', () => {
-    const preloader = document.querySelector('.preloader');
-    if (preloader) {
-        preloader.style.opacity = '0';
-        setTimeout(() => {
-            preloader.style.display = 'none';
-        }, 500);
-    }
-});
-
-console.log('Literacy of Love website loaded successfully! 💙');

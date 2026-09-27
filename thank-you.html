@@ -3,88 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You - Literacy of Love</title>
+    <title>Thank You — Literacy of Love</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <meta http-equiv="refresh" content="5;url=index.html">
+    <meta http-equiv="refresh" content="6;url=index.html">
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" aria-label="Primary">
         <div class="nav-container">
             <div class="nav-logo">
-                <a href="index.html">
-                    <img src="images/logo.jpg" alt="Literacy of Love Logo" class="logo-img">
+                <a href="index.html" aria-label="Literacy of Love — Home">
+                    <img src="images/logo.jpg" alt="" class="logo-img">
                     <h2>Literacy of Love</h2>
                 </a>
             </div>
             <ul class="nav-menu">
-                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="areas-of-need.html" class="nav-link">Needs and Accomplishments</a></li>
-                <li class="nav-item"><a href="sponsorship.html" class="nav-link">Sponsorship</a></li>
-                <li class="nav-item"><a href="shop.html" class="nav-link">Shop</a></li>
-                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-                <li class="nav-item"><a href="donate.html" class="nav-link donate-btn">Donate</a></li>
+                <li class="nav-item"><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+                <li class="nav-item"><a href="areas-of-need.html" class="nav-link" data-page="areas-of-need">Needs &amp; Impact</a></li>
+                <li class="nav-item"><a href="sponsorship.html" class="nav-link" data-page="sponsorship">Sponsorship</a></li>
+                <li class="nav-item"><a href="gallery.html" class="nav-link" data-page="gallery">Gallery</a></li>
+                <li class="nav-item"><a href="track-dolls.html" class="nav-link" data-page="track">Track your Ambassador</a></li>
+                <li class="nav-item"><a href="shop.html" class="nav-link" data-page="shop">Shop</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link" data-page="contact">Contact</a></li>
+                <li class="nav-item"><a href="donate.html" class="nav-link donate-btn" data-page="donate">Donate</a></li>
             </ul>
-            <div class="hamburger">
+            <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
-            </div>
+            </button>
         </div>
     </nav>
 
-    <!-- Thank You Section -->
-    <section class="page-hero">
-        <div class="hero-overlay">
-            <div class="container">
-                <h1 class="page-title">Thank You!</h1>
-                <p class="page-subtitle">Your message has been sent successfully</p>
-                <div class="thank-you-content" style="text-align: center; margin-top: 2rem;">
-                    <i class="fas fa-check-circle" style="font-size: 4rem; color: #4CAF50; margin-bottom: 1rem;"></i>
-                    <p>We've received your message and will get back to you as soon as possible.</p>
-                    <p>You will be redirected to the home page in 5 seconds...</p>
-                    <a href="index.html" class="btn btn-primary" style="margin-top: 1rem;">Return to Home</a>
+    <main id="main" class="thanks-page">
+        <div class="container">
+            <div class="thanks-card">
+                <div class="thanks-icon" aria-hidden="true">
+                    <i class="fas fa-check"></i>
                 </div>
+                <span class="eyebrow">Message received</span>
+                <h1>Thank you!</h1>
+                <p class="thanks-lead">Your message has been sent successfully. We&rsquo;ll get back to you as soon as possible.</p>
+                <p class="thanks-meta">You will be redirected to the home page in a few seconds&hellip;</p>
+                <a href="index.html" class="btn btn-primary">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Return to Home
+                </a>
             </div>
         </div>
-    </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section">
+                <div class="footer-section footer-brand">
                     <h3>Literacy of Love</h3>
-                    <p>Transforming lives through education, one child at a time.</p>
-                    <div class="social-links">
-                        <a href="https://www.facebook.com/cari.matejka" target="_blank"><i class="fab fa-facebook"></i></a>
-                        <a href="https://www.instagram.com/literacyoflove/" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="https://youtube.com/@carimatejka7178?si=GCaE2JGKwVd1XoYe" target="_blank"><i class="fab fa-youtube"></i></a>
-                        <a href="https://www.tiktok.com/@literacyoflove?_t=8l0rAn2XLig&_r=1" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    <p>Transforming lives through education, one child at a time. Registered in both the United States and Uganda.</p>
+                    <div class="social-links" aria-label="Social media">
+                        <a href="https://www.facebook.com/cari.matejka" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/literacyoflove/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@literacyoflove" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://youtube.com/@carimatejka7178" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4>Quick Links</h4>
+                    <h4>Explore</h4>
                     <ul>
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="areas-of-need.html">Needs and Accomplishments</a></li>
+                        <li><a href="areas-of-need.html">Needs &amp; Impact</a></li>
                         <li><a href="sponsorship.html">Sponsorship</a></li>
                         <li><a href="shop.html">Shop</a></li>
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
+                    <h4>Get involved</h4>
+                    <ul>
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="sponsorship.html">Sponsor a child</a></li>
+                        <li><a href="contact.html">Volunteer</a></li>
+                        <li><a href="contact.html">Visit Uganda</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
                     <h4>Contact</h4>
-                    <p>For more information about our mission and how you can help, please reach out to us.</p>
+                    <p>For more information about our mission and how you can help, please reach out.</p>
                     <a href="mailto:carimatejka1@gmail.com" class="contact-email">carimatejka1@gmail.com</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Literacy of Love. All rights reserved. | 100% of donations go directly to the cause.</p>
+                <p>&copy; 2025 Literacy of Love, Inc. All rights reserved. &nbsp;·&nbsp; 100% of donations go directly to the cause.</p>
             </div>
         </div>
     </footer>

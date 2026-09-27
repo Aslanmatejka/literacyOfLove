@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Follow Amina, Kofi, and Sena through a 3D day in the village — well, school, farm, shops, and home. Interactive Ambassador journey simulation.">
+    <meta name="theme-color" content="#0f1b2d">
+    <title>Track your Ambassador — Literacy of Love</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+    </script>
+</head>
+
+<body class="page-track">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <nav class="navbar" aria-label="Primary">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" aria-label="Literacy of Love — Home">
+                    <img src="images/logo.jpg" alt="" class="logo-img">
+                    <h2>Literacy of Love</h2>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+                <li class="nav-item"><a href="areas-of-need.html" class="nav-link" data-page="areas-of-need">Needs &amp; Impact</a></li>
+                <li class="nav-item"><a href="sponsorship.html" class="nav-link" data-page="sponsorship">Sponsorship</a></li>
+                <li class="nav-item"><a href="gallery.html" class="nav-link" data-page="gallery">Gallery</a></li>
+                <li class="nav-item"><a href="track-dolls.html" class="nav-link" data-page="track">Track your Ambassador</a></li>
+                <li class="nav-item"><a href="shop.html" class="nav-link" data-page="shop">Shop</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link" data-page="contact">Contact</a></li>
+                <li class="nav-item"><a href="donate.html" class="nav-link donate-btn" data-page="donate">Donate</a></li>
+            </ul>
+            <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <section id="main" class="page-hero track-hero">
+        <div class="hero-overlay">
+            <div class="container track-hero__inner">
+                <p class="track-hero__brand">Literacy of Love</p>
+                <span class="eyebrow eyebrow-light">3D Ambassador journey</span>
+                <h1 class="page-title">Follow love, in motion.</h1>
+                <p class="page-subtitle">Step into a living village day with Amina, Kofi, and Sena — from the morning well to school, farm, market, and evening home.</p>
+                <div class="track-hero__actions">
+                    <a href="#journey" class="btn btn-primary"><i class="fas fa-cube" aria-hidden="true"></i> Enter the village</a>
+                    <a href="#ambassador-videos" class="btn btn-secondary">Watch stories</a>
+                </div>
+                <ul class="track-hero__meta" aria-label="Journey details">
+                    <li><i class="fas fa-clock" aria-hidden="true"></i> 6 AM &ndash; 8 PM</li>
+                    <li><i class="fas fa-map" aria-hidden="true"></i> 6 places</li>
+                    <li><i class="fas fa-users" aria-hidden="true"></i> 3 Ambassadors</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="track-orient" aria-label="How to explore">
+        <div class="container">
+            <ol class="track-orient__list">
+                <li class="track-orient__item">
+                    <span class="track-orient__num">1</span>
+                    <div>
+                        <h2>Orbit the village</h2>
+                        <p>Drag to look around. Scroll to zoom. Click a place chip to fly there.</p>
+                    </div>
+                </li>
+                <li class="track-orient__item">
+                    <span class="track-orient__num">2</span>
+                    <div>
+                        <h2>Follow a child</h2>
+                        <p>Pick Amina, Kofi, or Sena — the camera tracks their path and chores.</p>
+                    </div>
+                </li>
+                <li class="track-orient__item">
+                    <span class="track-orient__num">3</span>
+                    <div>
+                        <h2>Scrub the day</h2>
+                        <p>Play, pause, or drag the timeline from sunrise to evening.</p>
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <section class="sim3d-section" id="journey">
+        <div class="container">
+            <div class="section-head">
+                <span class="eyebrow">Interactive 3D day</span>
+                <h2 class="section-title">A village on the move.</h2>
+                <p class="section-lead">Your exact Blender village — buildings, paths, and Ambassadors — playing the same day schedule.</p>
+            </div>
+
+            <div class="sim3d-roster" id="sim3dRoster" role="radiogroup" aria-label="Follow a child"></div>
+
+            <div class="sim3d-shell">
+                <div class="sim3d-viewport" id="sim3dViewport">
+                    <canvas id="sim3dCanvas" aria-label="3D village simulation"></canvas>
+                    <div class="sim3d-loading" id="sim3dLoading">
+                        <div class="sim3d-loading__spin" aria-hidden="true"></div>
+                        <p>Loading your Blender simulation&hellip;<br><small>~25&nbsp;MB first load</small></p>
+                    </div>
+                    <div class="sim3d-hud">
+                        <div class="sim3d-hud__clock"><i class="fas fa-clock" aria-hidden="true"></i> <span id="sim3dClock">6:00 AM</span></div>
+                        <div class="sim3d-hud__follow">Following <strong id="sim3dFollowName">Amina</strong></div>
+                    </div>
+                    <div class="sim3d-hint" aria-hidden="true">
+                        <span><i class="fas fa-hand-pointer"></i> Drag</span>
+                        <span><i class="fas fa-search-plus"></i> Zoom</span>
+                    </div>
+                </div>
+
+                <aside class="sim3d-panel" aria-label="Activity feed">
+                    <div class="sim3d-activity" id="sim3dActivity">
+                        <span class="sim3d-activity__badge" id="sim3dLocBadge">Home</span>
+                        <h3 class="sim3d-activity__title" id="sim3dActTitle">Wake / morning chores</h3>
+                        <p class="sim3d-activity__kid" id="sim3dActKid">Amina</p>
+                    </div>
+                    <div class="sim3d-feed">
+                        <h4>All Ambassadors</h4>
+                        <ul class="sim3d-feed__list" id="sim3dFeed"></ul>
+                    </div>
+                    <div class="sim3d-places" id="sim3dPlaces" aria-label="Jump to place"></div>
+                </aside>
+            </div>
+
+            <div class="sim3d-controls">
+                <div class="sim3d-transport" role="group" aria-label="Playback">
+                    <button type="button" class="sim-btn" id="sim3dRewind" aria-label="Jump to morning">
+                        <i class="fas fa-backward-fast" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="sim-btn sim-btn--primary" id="sim3dPlay" aria-pressed="true" aria-label="Pause">
+                        <i class="fas fa-pause" id="sim3dPlayIcon" aria-hidden="true"></i>
+                        <span id="sim3dPlayLabel">Pause</span>
+                    </button>
+                    <div class="sim3d-speeds" role="group" aria-label="Speed">
+                        <button type="button" class="sim-speed__btn" data-speed="0.5">0.5x</button>
+                        <button type="button" class="sim-speed__btn is-active" data-speed="1">1x</button>
+                        <button type="button" class="sim-speed__btn" data-speed="2">2x</button>
+                        <button type="button" class="sim-speed__btn" data-speed="4">4x</button>
+                    </div>
+                </div>
+                <div class="sim3d-scrub">
+                    <span class="sim3d-scrub__ends">6 AM</span>
+                    <input type="range" id="sim3dScrub" min="0" max="1000" value="0" step="1" aria-label="Scrub the day">
+                    <span class="sim3d-scrub__ends">8 PM</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ambassador-media" id="ambassador-videos">
+        <div class="container">
+            <div class="section-head">
+                <span class="eyebrow">Watch the journey</span>
+                <h2 class="section-title">Stories under two minutes.</h2>
+                <p class="section-lead">Meet the program, then follow each Ambassador through a real slice of life.</p>
+            </div>
+
+            <article class="ambassador-video ambassador-video--featured" id="video-overview">
+                <div class="ambassador-video__player">
+                    <video controls preload="metadata" playsinline poster="images/ambassadar.jpg">
+                        <source src="images/herovid.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="ambassador-video__info">
+                    <span class="ambassador-video__badge">Program overview</span>
+                    <h3>How Ambassador Dolls work</h3>
+                    <p>A handmade doll becomes a traveling token of love — adopted by you, carried by a child, and followed through updates from Uganda.</p>
+                    <span class="ambassador-video__meta"><i class="fas fa-clock" aria-hidden="true"></i> Under 2 min</span>
+                </div>
+            </article>
+
+            <div class="ambassador-video-grid">
+                <article class="ambassador-video ambassador-video--doll" id="video-amina" style="--doll-color:#eb593f">
+                    <div class="ambassador-video__player">
+                        <video controls preload="metadata" playsinline poster="images/adam.jpg">
+                            <source src="images/WhatsApp Video 2025-08-09 at 18.23.03_044909f1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="ambassador-video__info">
+                        <img class="ambassador-video__avatar" src="images/adam.jpg" alt="" width="44" height="44">
+                        <h3>Amina&rsquo;s journey</h3>
+                        <p>Well, school, farm, woods, and market — her doll rides along.</p>
+                        <span class="ambassador-video__meta"><i class="fas fa-clock" aria-hidden="true"></i> Under 2 min</span>
+                    </div>
+                </article>
+                <article class="ambassador-video ambassador-video--doll" id="video-kofi" style="--doll-color:#408cf2">
+                    <div class="ambassador-video__player">
+                        <video controls preload="metadata" playsinline poster="images/rita.jpg">
+                            <source src="images/WhatsApp Video 2025-08-25 at 04.24.53_b77fd868.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="ambassador-video__info">
+                        <img class="ambassador-video__avatar" src="images/rita.jpg" alt="" width="44" height="44">
+                        <h3>Kofi&rsquo;s journey</h3>
+                        <p>Kindling at dawn, classes, afternoon water, then the farm.</p>
+                        <span class="ambassador-video__meta"><i class="fas fa-clock" aria-hidden="true"></i> Under 2 min</span>
+                    </div>
+                </article>
+                <article class="ambassador-video ambassador-video--doll" id="video-sena" style="--doll-color:#40c773">
+                    <div class="ambassador-video__player">
+                        <video controls preload="metadata" playsinline poster="images/kudra.jpg">
+                            <source src="images/herovid.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="ambassador-video__info">
+                        <img class="ambassador-video__avatar" src="images/kudra.jpg" alt="" width="44" height="44">
+                        <h3>Sena&rsquo;s journey</h3>
+                        <p>Market lunch run, crops in the afternoon, wood before dusk.</p>
+                        <span class="ambassador-video__meta"><i class="fas fa-clock" aria-hidden="true"></i> Under 2 min</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="ambassador-gallery-track" id="ambassador-gallery">
+        <div class="container">
+            <div class="section-head section-head--split">
+                <div>
+                    <span class="eyebrow">Moments from the village</span>
+                    <h2 class="section-title">Places on the map.</h2>
+                    <p class="section-lead">The same stops you just walked in 3D.</p>
+                </div>
+                <a href="gallery.html" class="btn btn-secondary"><i class="fas fa-images" aria-hidden="true"></i> Full gallery</a>
+            </div>
+            <div class="ambassador-gallery-grid ambassador-gallery-grid--six">
+                <figure class="ambassador-gallery-item">
+                    <img src="images/home.jpg" alt="Home" loading="lazy">
+                    <figcaption>Home</figcaption>
+                </figure>
+                <figure class="ambassador-gallery-item">
+                    <img src="images/WhatsApp Image 2025-08-09 at 18.18.29_9c7c59f2.jpg" alt="Well" loading="lazy">
+                    <figcaption>Well</figcaption>
+                </figure>
+                <figure class="ambassador-gallery-item">
+                    <img src="images/education.jpg" alt="School" loading="lazy">
+                    <figcaption>School</figcaption>
+                </figure>
+                <figure class="ambassador-gallery-item">
+                    <img src="images/farm.jpg" alt="Farm" loading="lazy">
+                    <figcaption>Farm</figcaption>
+                </figure>
+                <figure class="ambassador-gallery-item">
+                    <img src="images/our kids.jpeg" alt="Village life" loading="lazy">
+                    <figcaption>Village</figcaption>
+                </figure>
+                <figure class="ambassador-gallery-item">
+                    <img src="images/ambassadar.jpg" alt="Ambassador Doll" loading="lazy">
+                    <figcaption>Ambassador</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <section class="ambassador-nametags" id="nametags">
+        <div class="container">
+            <div class="section-head">
+                <span class="eyebrow">Print &amp; attach</span>
+                <h2 class="section-title">Name tags with QR.</h2>
+                <p class="section-lead">Photo, bio, and a code that opens each child&rsquo;s journey video.</p>
+            </div>
+            <div class="nametag-grid" id="nametagGrid" aria-label="Ambassador name tags"></div>
+            <p class="nametag-print-hint"><i class="fas fa-print" aria-hidden="true"></i> Use Print on this page for clean name-tag sheets.</p>
+        </div>
+    </section>
+
+    <section class="track-how">
+        <div class="container">
+            <div class="section-head">
+                <span class="eyebrow">From gift to journey</span>
+                <h2 class="section-title">A traveling token of love.</h2>
+            </div>
+            <div class="track-steps">
+                <article class="track-step">
+                    <span class="track-step__num">1</span>
+                    <i class="fas fa-gift" aria-hidden="true"></i>
+                    <h3>Adopt a Doll</h3>
+                    <p>Your gift sends a handmade Ambassador Doll to a child at The Heart.</p>
+                </article>
+                <article class="track-step">
+                    <span class="track-step__num">2</span>
+                    <i class="fas fa-route" aria-hidden="true"></i>
+                    <h3>It travels with them</h3>
+                    <p>Well, school, farm, shops, wood — the doll shares daily life.</p>
+                </article>
+                <article class="track-step">
+                    <span class="track-step__num">3</span>
+                    <i class="fas fa-cube" aria-hidden="true"></i>
+                    <h3>You follow along</h3>
+                    <p>Explore the day in 3D here — then receive real photo updates.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="track-cta">
+        <div class="container track-cta__inner">
+            <div class="track-cta__copy">
+                <span class="eyebrow eyebrow-light">Get involved</span>
+                <h2>Send a doll on its journey.</h2>
+                <p>Adopt an Ambassador Doll and follow real moments of joy, learning, and hope.</p>
+            </div>
+            <div class="track-cta__actions">
+                <a href="donate.html" class="btn btn-primary"><i class="fas fa-heart" aria-hidden="true"></i> Adopt a Doll</a>
+                <a href="sponsorship.html" class="btn btn-secondary">Sponsor a Child</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section footer-brand">
+                    <h3>Literacy of Love</h3>
+                    <p>Transforming lives through education, one child at a time. Registered in both the United States and Uganda.</p>
+                    <div class="social-links" aria-label="Social media">
+                        <a href="https://www.facebook.com/cari.matejka" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/literacyoflove/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@literacyoflove" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://youtube.com/@carimatejka7178" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Explore</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="areas-of-need.html">Needs &amp; Impact</a></li>
+                        <li><a href="sponsorship.html">Sponsorship</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="track-dolls.html">Track your Ambassador</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Get involved</h4>
+                    <ul>
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="sponsorship.html">Sponsor a child</a></li>
+                        <li><a href="contact.html">Volunteer</a></li>
+                        <li><a href="contact.html">Visit Uganda</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>For more information about our mission and how you can help, please reach out.</p>
+                    <a href="mailto:carimatejka1@gmail.com" class="contact-email">carimatejka1@gmail.com</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Literacy of Love, Inc. All rights reserved. &nbsp;·&nbsp; 100% of donations go directly to the cause.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script type="module">
+        import { SimViewer } from './sim-viewer.js';
+
+        const canvas = document.getElementById('sim3dCanvas');
+        const loading = document.getElementById('sim3dLoading');
+        const roster = document.getElementById('sim3dRoster');
+        const feed = document.getElementById('sim3dFeed');
+        const placesEl = document.getElementById('sim3dPlaces');
+        const clockEl = document.getElementById('sim3dClock');
+        const followName = document.getElementById('sim3dFollowName');
+        const actTitle = document.getElementById('sim3dActTitle');
+        const actKid = document.getElementById('sim3dActKid');
+        const locBadge = document.getElementById('sim3dLocBadge');
+        const scrub = document.getElementById('sim3dScrub');
+        const playBtn = document.getElementById('sim3dPlay');
+        const playIcon = document.getElementById('sim3dPlayIcon');
+        const playLabel = document.getElementById('sim3dPlayLabel');
+        let scrubbing = false;
+
+        const PLACE_ICONS = {
+            Home: 'fa-house', School: 'fa-book-open', Farm: 'fa-seedling',
+            Shops: 'fa-store', Wood: 'fa-tree', Well: 'fa-tint'
+        };
+
+        const viewer = new SimViewer(canvas, {
+            scheduleUrl: 'simulation/web/schedule.json',
+            onReady({ kids, locations, error }) {
+                if (loading) loading.hidden = true;
+                if (error) {
+                    if (loading) {
+                        loading.hidden = false;
+                        loading.querySelector('p').textContent = error;
+                    }
+                    return;
+                }
+                roster.innerHTML = '';
+                kids.forEach((k, i) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'sim3d-kid' + (i === 0 ? ' is-active' : '');
+                    btn.setAttribute('role', 'radio');
+                    btn.setAttribute('aria-checked', i === 0 ? 'true' : 'false');
+                    btn.style.setProperty('--kc', k.color);
+                    btn.innerHTML = `
+                        <span class="sim3d-kid__swatch"></span>
+                        <span class="sim3d-kid__copy">
+                            <span class="sim3d-kid__role">Ambassador</span>
+                            <span class="sim3d-kid__name">${k.name}</span>
+                        </span>
+                        <span class="sim3d-kid__follow">Follow</span>`;
+                    btn.addEventListener('click', () => {
+                        viewer.follow(k.id);
+                        roster.querySelectorAll('.sim3d-kid').forEach((el) => {
+                            el.classList.toggle('is-active', el === btn);
+                            el.setAttribute('aria-checked', el === btn ? 'true' : 'false');
+                        });
+                    });
+                    roster.appendChild(btn);
+                });
+
+                placesEl.innerHTML = '';
+                locations.forEach((name) => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'sim3d-place';
+                    b.innerHTML = `<i class="fas ${PLACE_ICONS[name] || 'fa-map-pin'}" aria-hidden="true"></i> ${name}`;
+                    b.addEventListener('click', () => viewer.jumpToLocation(name));
+                    placesEl.appendChild(b);
+                });
+
+                viewer.resize();
+            },
+            onTick(state) {
+                clockEl.textContent = state.clock;
+                if (!scrubbing) scrub.value = String(Math.round(state.progress * 1000));
+                const followed = state.kids.find((k) => k.id === state.followId) || state.kids[0];
+                if (followed) {
+                    followName.textContent = followed.name;
+                    actTitle.textContent = followed.activity;
+                    actKid.textContent = followed.name;
+                    locBadge.textContent = followed.location;
+                }
+                feed.innerHTML = state.kids.map((k) => `
+                    <li class="sim3d-feed__item${k.id === state.followId ? ' is-active' : ''}" style="--kc:${k.color}">
+                        <strong>${k.name}</strong>
+                        <span>${k.location}</span>
+                        <em>${k.activity}</em>
+                    </li>`).join('');
+            }
+        });
+
+        playBtn.addEventListener('click', () => {
+            const playing = viewer.togglePlay();
+            playBtn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+            playIcon.className = playing ? 'fas fa-pause' : 'fas fa-play';
+            playLabel.textContent = playing ? 'Pause' : 'Play';
+        });
+
+        document.getElementById('sim3dRewind').addEventListener('click', () => {
+            viewer.setProgress(0);
+        });
+
+        document.querySelectorAll('.sim3d-speeds [data-speed]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                viewer.setSpeed(parseFloat(btn.dataset.speed));
+                document.querySelectorAll('.sim3d-speeds [data-speed]').forEach((b) => b.classList.toggle('is-active', b === btn));
+            });
+        });
+
+        scrub.addEventListener('pointerdown', () => { scrubbing = true; });
+        scrub.addEventListener('pointerup', () => { scrubbing = false; });
+        scrub.addEventListener('input', () => {
+            viewer.setProgress(+scrub.value / 1000);
+        });
+
+        // Name tags
+        const dolls = [
+            { slug: 'amina', name: 'Amina', photo: 'images/adam.jpg', color: '#eb593f',
+              bio: 'Fetches water at dawn, then school, farm, and market before evening.' },
+            { slug: 'kofi', name: 'Kofi', photo: 'images/rita.jpg', color: '#408cf2',
+              bio: 'Gathers kindling early, studies hard, helps on the farm after class.' },
+            { slug: 'sena', name: 'Sena', photo: 'images/kudra.jpg', color: '#40c773',
+              bio: 'Market errands at lunch, tends crops, brings wood home at dusk.' }
+        ];
+        const grid = document.getElementById('nametagGrid');
+        const baseUrl = location.href.split('#')[0];
+        dolls.forEach((d) => {
+            const card = document.createElement('article');
+            card.className = 'nametag';
+            card.style.setProperty('--tag-color', d.color);
+            card.innerHTML = `
+                <div class="nametag__header">
+                    <img class="nametag__logo" src="images/logo.jpg" alt="" width="28" height="28">
+                    <span class="nametag__brand">Literacy of Love</span>
+                    <span class="nametag__badge">Ambassador</span>
+                </div>
+                <div class="nametag__body">
+                    <img class="nametag__photo" src="${d.photo}" alt="${d.name}" width="72" height="72" loading="lazy">
+                    <div class="nametag__info">
+                        <h3 class="nametag__name">${d.name}</h3>
+                        <p class="nametag__bio">${d.bio}</p>
+                    </div>
+                    <div class="nametag__qr">
+                        <canvas class="nametag__qr-canvas" data-slug="${d.slug}"></canvas>
+                        <span class="nametag__qr-label">Scan for video</span>
+                    </div>
+                </div>
+                <p class="nametag__footer">Village day &middot; literacyoflove.org</p>`;
+            grid.appendChild(card);
+        });
+
+        const qrScript = document.createElement('script');
+        qrScript.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js';
+        qrScript.onload = () => {
+            grid.querySelectorAll('.nametag__qr-canvas').forEach((canvas) => {
+                QRCode.toCanvas(canvas, baseUrl + '#video-' + canvas.dataset.slug, {
+                    width: 108, margin: 1, color: { dark: '#0f1b2d', light: '#ffffff' }
+                });
+            });
+        };
+        document.body.appendChild(qrScript);
+    </script>
+</body>
+</html>

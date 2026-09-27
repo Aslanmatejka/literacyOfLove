@@ -1,0 +1,18 @@
+# Blender toolchain & offline sim source (site only needs simulation/web/)
+simulation/tools/
+simulation/output/
+simulation/assets/
+simulation/data/
+simulation/scripts/
+*.blend
+*.blend1
+
+# Local media dumps (site videos live under images/)
+track ambassadors video/
+
+# OS / editor / secrets
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*

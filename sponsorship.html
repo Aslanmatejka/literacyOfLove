@@ -11,36 +11,41 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" aria-label="Primary">
         <div class="nav-container">
             <div class="nav-logo">
-                 <a href="index.html">
-                    <img src="images/logo.jpg" alt="Literacy of Love Logo" class="logo-img">
-                <h2>Literacy of Love</h2>
+                <a href="index.html" aria-label="Literacy of Love — Home">
+                    <img src="images/logo.jpg" alt="" class="logo-img">
+                    <h2>Literacy of Love</h2>
+                </a>
             </div>
             <ul class="nav-menu">
-                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="areas-of-need.html" class="nav-link">Needs and Accomplishments</a></li>
-                <li class="nav-item"><a href="sponsorship.html" class="nav-link">Sponsorship</a></li>
-                <li class="nav-item"><a href="shop.html" class="nav-link">Shop</a></li>
-                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-                <li class="nav-item"><a href="donate.html" class="nav-link donate-btn">Donate</a></li>
+                <li class="nav-item"><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+                <li class="nav-item"><a href="areas-of-need.html" class="nav-link" data-page="areas-of-need">Needs &amp; Impact</a></li>
+                <li class="nav-item"><a href="sponsorship.html" class="nav-link" data-page="sponsorship">Sponsorship</a></li>
+                <li class="nav-item"><a href="gallery.html" class="nav-link" data-page="gallery">Gallery</a></li>
+                <li class="nav-item"><a href="track-dolls.html" class="nav-link" data-page="track">Track your Ambassador</a></li>
+                <li class="nav-item"><a href="shop.html" class="nav-link" data-page="shop">Shop</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link" data-page="contact">Contact</a></li>
+                <li class="nav-item"><a href="donate.html" class="nav-link donate-btn" data-page="donate">Donate</a></li>
             </ul>
-            <div class="hamburger">
+            <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
-            </div>
+            </button>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="page-hero">
+    <section id="main" class="page-hero page-hero--sponsorship">
         <div class="hero-overlay">
             <div class="container">
-                <h1 class="page-title">Sponsorship</h1>
-                <p class="page-subtitle">Change a life, create a ripple effect</p>
+                <span class="eyebrow eyebrow-light">Sponsorship</span>
+                <h1 class="page-title">Change a life. Cause a ripple.</h1>
+                <p class="page-subtitle">Sponsor a child&rsquo;s education and watch a future take shape.</p>
             </div>
         </div>
     </section>
@@ -48,7 +53,7 @@
     <!-- Sponsorship Intro -->
     <section class="sponsorship-intro">
         <div class="container">
-            <div class="intro-content" style="text-align: center;">
+            <div class="intro-content">
                 <h2 class="section-title">The Power of Sponsorship</h2>
                 <p class="intro-text">Literacy of Love has the belief that by changing one life, we will cause a ripple effect. Our children are the hope of their families, and yet, they will also, hopefully, be the change to break the cycle they come from. Our vulnerable and destitute children have a wide variety of backgrounds. Some were abused, some rescued from dire circumstances, some orphaned while others were abandoned, or their basic needs were neglected.</p>
                 
@@ -179,7 +184,7 @@
                 <div class="level-card">
                     <div class="level-header">
                         <i class="fas fa-university"></i>
-                        <h3 style="text-align: center">University/Vocational</h3>
+                        <h3>University / Vocational</h3>
                         <div class="price">$1,500 - $2,000<span>/year</span></div>
                     </div>
                     <ul class="level-features">
@@ -233,7 +238,7 @@
     <section class="personal-connection">
         <div class="container">
             <div class="connection-content">
-                <div class="connection-text" style="text-align:justify">
+                <div class="connection-text">
                     <h2>Personal Connections</h2>
                     <p>Literacy of Love creates connections between families and the children they sponsor. Cari facilitates letters between you and your sponsored child. Cari personally knows each child, and we work hard to develop special and personal connections.</p>
                     
@@ -317,34 +322,43 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section">
+                <div class="footer-section footer-brand">
                     <h3>Literacy of Love</h3>
-                    <p>Transforming lives through education, one child at a time.</p>
-                    <div class="social-links">
-                        <a href="https://www.facebook.com/cari.matejka" target="_blank"><i class="fab fa-facebook"></i></a>
-                        <a href="https://www.instagram.com/literacyoflove/" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="https://youtube.com/@carimatejka7178?si=GCaE2JGKwVd1XoYe" target="_blank"><i class="fab fa-youtube"></i></a>
-                        <a href="https://www.tiktok.com/@literacyoflove?_t=8l0rAn2XLig&_r=1" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    <p>Transforming lives through education, one child at a time. Registered in both the United States and Uganda.</p>
+                    <div class="social-links" aria-label="Social media">
+                        <a href="https://www.facebook.com/cari.matejka" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/literacyoflove/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@literacyoflove" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://youtube.com/@carimatejka7178" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4>Quick Links</h4>
+                    <h4>Explore</h4>
                     <ul>
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="areas-of-need.html">Needs and Accomplishments</a></li>
+                        <li><a href="areas-of-need.html">Needs &amp; Impact</a></li>
                         <li><a href="sponsorship.html">Sponsorship</a></li>
                         <li><a href="shop.html">Shop</a></li>
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
+                    <h4>Get involved</h4>
+                    <ul>
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="sponsorship.html">Sponsor a child</a></li>
+                        <li><a href="contact.html">Volunteer</a></li>
+                        <li><a href="contact.html">Visit Uganda</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
                     <h4>Contact</h4>
-                    <p>For more information about our mission and how you can help, please reach out to us.</p>
+                    <p>For more information about our mission and how you can help, please reach out.</p>
                     <a href="mailto:carimatejka1@gmail.com" class="contact-email">carimatejka1@gmail.com</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Literacy of Love. All rights reserved. | 100% of donations go directly to the cause.</p>
+                <p>&copy; 2025 Literacy of Love, Inc. All rights reserved. &nbsp;·&nbsp; 100% of donations go directly to the cause.</p>
             </div>
         </div>
     </footer>
