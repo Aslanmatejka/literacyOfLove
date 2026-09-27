@@ -68,6 +68,8 @@ export class SimViewer {
     this.speed = 1;
     this.dayHour = 6;
     this.followId = null;
+    /** When true, user is orbiting freely — don't overwrite camera with follow-cam */
+    this.freeLook = false;
     this.schedule = null;
     this.meta = null;
     this.pathMixer = null;
@@ -106,13 +108,19 @@ export class SimViewer {
     this.camera = new THREE.PerspectiveCamera(40, rect.width / Math.max(rect.height, 1), 0.2, 250);
     this.camera.position.set(-36, 28, 42);
 
-    this.controls = new OrbitControls(this.camera, this.canvas);
+    // Use the viewport (not just the canvas) so drag/zoom hit the full stage
+    const orbitEl = this.canvas.parentElement || this.canvas;
+    this.controls = new OrbitControls(this.camera, orbitEl);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.06;
     this.controls.maxPolarAngle = Math.PI * 0.49;
     this.controls.minDistance = 8;
     this.controls.maxDistance = 120;
     this.controls.target.set(0, 1.5, 0);
+    // Follow-cam fights orbit unless we release it while the user drags/zooms
+    this.controls.addEventListener('start', () => {
+      this.freeLook = true;
+    });
 
     window.addEventListener('resize', () => this.resize());
   }
@@ -512,7 +520,7 @@ export class SimViewer {
     this.scene.background.set(dusk ? 0xb48a68 : 0xb9d4ea);
     this.scene.fog.color.copy(this.scene.background);
 
-    if (this.followId) {
+    if (this.followId && !this.freeLook) {
       const st = states.find((s) => s.id === this.followId);
       if (st?.position) {
         const desired = st.position.clone().add(new THREE.Vector3(-7, 8, 9));
@@ -563,13 +571,20 @@ export class SimViewer {
     });
   }
 
-  follow(id) { this.followId = id; }
-  clearFollow() { this.followId = null; }
+  follow(id) {
+    this.followId = id;
+    this.freeLook = false;
+  }
+  clearFollow() {
+    this.followId = null;
+    this.freeLook = true;
+  }
 
   jumpToLocation(name) {
     const co = LOCATION_COORDS[name];
     if (!co) return;
     this.followId = null;
+    this.freeLook = true;
     this.controls.target.set(co.x, 1.5, co.z);
     this.camera.position.set(co.x - 12, 14, co.z + 14);
   }

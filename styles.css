@@ -6235,7 +6235,10 @@ body.panorama-open { overflow: hidden; }
     border: 1px solid var(--ink-100, #e8e2d8);
     box-shadow: var(--sh-3, 0 18px 40px rgba(15,27,45,0.14));
     background: #9ec4e0;
+    touch-action: none;
+    cursor: grab;
 }
+.sim3d-viewport:active { cursor: grabbing; }
 .sim3d-viewport canvas {
     display: block;
     width: 100%;
