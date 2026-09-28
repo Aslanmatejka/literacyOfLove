@@ -151,7 +151,7 @@ export class SimViewer {
   _ensureWell() {
     let hasWell = false;
     this.scene.traverse((o) => {
-      if (o.name && /^PH_Well/i.test(o.name)) hasWell = true;
+      if (o.name && /^(PH_Well|WELL_)/i.test(o.name)) hasWell = true;
     });
     if (hasWell) return;
     const c = LOCATION_COORDS.Well;

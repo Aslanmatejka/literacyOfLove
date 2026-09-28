@@ -6091,7 +6091,7 @@ body.panorama-open { overflow: hidden; }
 }
 
 /* ============================================================
-   Track page — 3D village viewer (replaces Leaflet map)
+   Track page ï¿½ 3D village viewer (replaces Leaflet map)
    ============================================================ */
 .page-track .track-hero {
     min-height: clamp(400px, 52vh, 520px);
