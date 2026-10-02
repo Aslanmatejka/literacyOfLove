@@ -77,7 +77,7 @@
                     <span class="track-orient__num">1</span>
                     <div>
                         <h2>Orbit the village</h2>
-                        <p>Drag to look around. Scroll to zoom. Click a place chip to fly there.</p>
+                        <p>Use the look and zoom buttons. Tap a place to fly there.</p>
                     </div>
                 </li>
                 <li class="track-orient__item">
@@ -119,10 +119,14 @@
                         <div class="sim3d-hud__clock"><i class="fas fa-clock" aria-hidden="true"></i> <span id="sim3dClock">6:00 AM</span></div>
                         <div class="sim3d-hud__follow">Following <strong id="sim3dFollowName">Amina</strong></div>
                         </div>
-                    <div class="sim3d-hint" aria-hidden="true">
-                        <span><i class="fas fa-hand-pointer"></i> Drag</span>
-                        <span><i class="fas fa-search-plus"></i> Zoom</span>
-                            </div>
+                    <div class="sim3d-nav" role="group" aria-label="Look around the village">
+                        <button type="button" class="sim3d-nav__btn" data-view="up" aria-label="Look up"><i class="fas fa-chevron-up" aria-hidden="true"></i></button>
+                        <button type="button" class="sim3d-nav__btn" data-view="left" aria-label="Turn left"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                        <button type="button" class="sim3d-nav__btn" data-view="zoom-in" aria-label="Zoom in"><i class="fas fa-search-plus" aria-hidden="true"></i></button>
+                        <button type="button" class="sim3d-nav__btn" data-view="zoom-out" aria-label="Zoom out"><i class="fas fa-search-minus" aria-hidden="true"></i></button>
+                        <button type="button" class="sim3d-nav__btn" data-view="right" aria-label="Turn right"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+                        <button type="button" class="sim3d-nav__btn" data-view="down" aria-label="Look down"><i class="fas fa-chevron-down" aria-hidden="true"></i></button>
+                    </div>
                         </div>
 
                 <aside class="sim3d-panel" aria-label="Activity feed">
@@ -460,6 +464,34 @@
                         <em>${k.activity}</em>
                     </li>`).join('');
             }
+        });
+
+        const applyView = (view) => {
+            if (view === 'left') viewer.nudgeView(0.4, 0);
+            else if (view === 'right') viewer.nudgeView(-0.4, 0);
+            else if (view === 'up') viewer.nudgeView(0, -0.12);
+            else if (view === 'down') viewer.nudgeView(0, 0.12);
+            else if (view === 'zoom-in') viewer.zoomBy(0.8);
+            else if (view === 'zoom-out') viewer.zoomBy(1.25);
+        };
+        document.querySelectorAll('.sim3d-nav__btn').forEach((btn) => {
+            btn.addEventListener('pointerdown', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                applyView(btn.dataset.view);
+                let timer = 0;
+                const start = window.setTimeout(() => {
+                    timer = window.setInterval(() => applyView(btn.dataset.view), 90);
+                }, 280);
+                const stop = () => {
+                    window.clearTimeout(start);
+                    window.clearInterval(timer);
+                    window.removeEventListener('pointerup', stop);
+                    window.removeEventListener('pointercancel', stop);
+                };
+                window.addEventListener('pointerup', stop);
+                window.addEventListener('pointercancel', stop);
+            });
         });
 
         playBtn.addEventListener('click', () => {

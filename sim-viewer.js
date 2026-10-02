@@ -108,21 +108,68 @@ export class SimViewer {
     this.camera = new THREE.PerspectiveCamera(40, rect.width / Math.max(rect.height, 1), 0.2, 250);
     this.camera.position.set(-36, 28, 42);
 
-    // Use the viewport (not just the canvas) so drag/zoom hit the full stage
-    const orbitEl = this.canvas.parentElement || this.canvas;
-    this.controls = new OrbitControls(this.camera, orbitEl);
+    this.controls = new OrbitControls(this.camera, this.canvas);
+    this.controls.enabled = false;
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.06;
     this.controls.maxPolarAngle = Math.PI * 0.49;
     this.controls.minDistance = 8;
     this.controls.maxDistance = 120;
     this.controls.target.set(0, 1.5, 0);
-    // Follow-cam fights orbit unless we release it while the user drags/zooms
-    this.controls.addEventListener('start', () => {
-      this.freeLook = true;
-    });
 
     window.addEventListener('resize', () => this.resize());
+    this._bindDisplayRecovery();
+  }
+
+  _bindDisplayRecovery() {
+    const parent = this.canvas.parentElement;
+    if (parent && typeof ResizeObserver !== 'undefined') {
+      this._resizeObserver = new ResizeObserver(() => this.resize());
+      this._resizeObserver.observe(parent);
+    }
+
+    this.canvas.addEventListener('webglcontextlost', (event) => {
+      event.preventDefault();
+      this._contextLost = true;
+      const gl = this.renderer.getContext();
+      const lose = gl && gl.getExtension('WEBGL_lose_context');
+      window.setTimeout(() => {
+        try { lose && lose.restoreContext(); } catch (err) { /* restore already in progress */ }
+      }, 200);
+    });
+
+    this.canvas.addEventListener('webglcontextrestored', () => {
+      this._contextLost = false;
+      this.resize();
+      this._kickLoop();
+    });
+
+    window.addEventListener('pageshow', () => {
+      this.clock.getDelta();
+      this._contextLost = false;
+      this.resize();
+      this._kickLoop();
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState !== 'visible') return;
+      this.clock.getDelta();
+      const gl = this.renderer.getContext();
+      if (gl && gl.isContextLost()) {
+        this._contextLost = true;
+        const lose = gl.getExtension('WEBGL_lose_context');
+        try { lose && lose.restoreContext(); } catch (err) { /* ignore */ }
+        return;
+      }
+      this.resize();
+      this._kickLoop();
+    });
+  }
+
+  _kickLoop() {
+    if (this._loopQueued) return;
+    this._loopQueued = true;
+    this._raf = requestAnimationFrame(this._animate);
   }
 
   _initScene() {
@@ -157,26 +204,361 @@ export class SimViewer {
     const c = LOCATION_COORDS.Well;
     const g = new THREE.Group();
     g.name = 'Well_Fallback';
-    const stone = new THREE.MeshStandardMaterial({ color: 0x8a8a90, roughness: 0.85 });
-    const wood = new THREE.MeshStandardMaterial({ color: 0x664829, roughness: 0.9 });
-    const water = new THREE.MeshStandardMaterial({ color: 0x4d8ccc, roughness: 0.35 });
-    const ring = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 1.0, 20), stone);
-    ring.position.set(0, 0.5, 0);
-    ring.castShadow = true;
-    g.add(ring);
-    const pool = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.2, 20), water);
-    pool.position.set(0, 0.35, 0);
+    const mud = new THREE.MeshStandardMaterial({ color: 0x73522e, roughness: 0.95 });
+    const water = new THREE.MeshStandardMaterial({ color: 0x387aa0, roughness: 0.25 });
+    const bank = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, 0.1, 28), mud);
+    bank.position.set(0, 0.05, 0);
+    g.add(bank);
+    const pool = new THREE.Mesh(new THREE.CylinderGeometry(2.05, 2.05, 0.06, 28), water);
+    pool.position.set(0, 0.08, 0);
+    pool.name = 'WELL_Water';
     g.add(pool);
-    [[-1], [1]].forEach(([x]) => {
-      const post = new THREE.Mesh(new THREE.BoxGeometry(0.15, 2.0, 0.15), wood);
-      post.position.set(x, 1.2, 0);
-      g.add(post);
-    });
-    const beam = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.15, 0.15), wood);
-    beam.position.set(0, 2.2, 0);
-    g.add(beam);
     g.position.copy(c);
     this.scene.add(g);
+  }
+
+  _waterMaterial(normalMap) {
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: { value: 0 },
+        uSun: { value: new THREE.Vector3(0.4, 1, 0.2) },
+        uNormal: { value: normalMap },
+      },
+      transparent: true,
+      depthWrite: false,
+      vertexShader: `
+        uniform float uTime;
+        varying vec3 vWorld;
+        varying vec2 vLocal;
+
+        void main() {
+          vec3 p = position;
+          vLocal = vec2(p.x, p.z);
+          float flow = p.x - uTime * 1.5;
+          p.y += sin(flow * 5.5) * 0.008;
+          vec4 world = modelMatrix * vec4(p, 1.0);
+          vWorld = world.xyz;
+          gl_Position = projectionMatrix * viewMatrix * world;
+        }
+      `,
+      fragmentShader: `
+        uniform float uTime;
+        uniform vec3 uSun;
+        uniform sampler2D uNormal;
+        varying vec3 vWorld;
+        varying vec2 vLocal;
+
+        void main() {
+          float halfL = 6.6;
+          float halfW = 1.45;
+          vec2 q = abs(vLocal) - vec2(halfL - halfW, 0.0);
+          float sd = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - halfW;
+          if (sd > 0.0) discard;
+
+          vec2 flowUv = vec2(vLocal.x * 0.55, vLocal.y * 1.6);
+          vec3 nA = texture2D(uNormal, flowUv + vec2(-uTime * 0.85, 0.0)).xyz * 2.0 - 1.0;
+          vec3 nB = texture2D(uNormal, flowUv * 1.8 + vec2(-uTime * 1.45, 0.03)).xyz * 2.0 - 1.0;
+          vec3 n = normalize(vec3((nA.x + nB.x) * 1.4, 0.85, nA.y + nB.y));
+
+          vec3 viewDir = normalize(cameraPosition - vWorld);
+          vec3 sunDir = normalize(uSun);
+          float ndotv = max(dot(n, viewDir), 0.0);
+          float fres = pow(1.0 - ndotv, 2.2);
+          float spec = pow(max(dot(reflect(-sunDir, n), viewDir), 0.0), 48.0);
+          float rush = pow(clamp(nA.x * 0.5 + 0.5, 0.0, 1.0), 3.0);
+
+          vec3 water = vec3(0.30, 0.70, 0.78);
+          vec3 sky = vec3(0.84, 0.93, 0.97);
+          vec3 col = mix(water, water * 1.35, rush * 0.45);
+          col = mix(col, sky, fres * 0.65);
+          col += spec * vec3(0.95, 0.98, 1.0) * 0.5;
+          gl_FragColor = vec4(col, 0.8);
+        }
+      `,
+    });
+  }
+
+  _setupWater() {
+    this.waterMats = [];
+    const sources = [];
+    this.scene.traverse((o) => {
+      if (!o.isMesh) return;
+      if (o.name === 'WELL_Water' || o.name === 'WELL_Bank') {
+        sources.push(o);
+        o.visible = false;
+      }
+    });
+    const water = sources.find((o) => o.name === 'WELL_Water');
+    if (!water) return;
+    const box = new THREE.Box3().setFromObject(water);
+    const cx = (box.min.x + box.max.x) * 0.5;
+    const cz = (box.min.z + box.max.z) * 0.5;
+    const y = box.max.y + 0.06;
+    const normals = new THREE.TextureLoader().load('simulation/web/assets/waternormals.jpg');
+    normals.wrapS = THREE.RepeatWrapping;
+    normals.wrapT = THREE.RepeatWrapping;
+    normals.colorSpace = THREE.NoColorSpace;
+    const geo = new THREE.PlaneGeometry(14, 3.2, 80, 12);
+    geo.rotateX(-Math.PI / 2);
+    const mat = this._waterMaterial(normals);
+    const surface = new THREE.Mesh(geo, mat);
+    surface.name = 'WELL_WaterSurface';
+    surface.position.set(cx, y + 0.04, cz);
+    surface.renderOrder = 2;
+    this.scene.add(surface);
+    this.waterMats.push(mat);
+  }
+
+  _dirtTexture() {
+    if (this._dirtMap) return this._dirtMap;
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 128;
+    const g = canvas.getContext('2d');
+    g.fillStyle = '#8b6842';
+    g.fillRect(0, 0, 256, 128);
+    for (let i = 0; i < 2200; i += 1) {
+      const x = Math.random() * 256;
+      const y = Math.random() * 128;
+      const shade = 70 + Math.random() * 90;
+      g.fillStyle = `rgba(${shade + 30}, ${Math.floor(shade * 0.72)}, ${Math.floor(shade * 0.42)}, 0.45)`;
+      g.fillRect(x, y, 2 + Math.random() * 2, 2);
+    }
+    g.fillStyle = 'rgba(70, 48, 28, 0.35)';
+    g.fillRect(0, 34, 256, 14);
+    g.fillRect(0, 80, 256, 14);
+    g.fillStyle = 'rgba(196, 164, 116, 0.35)';
+    g.fillRect(0, 0, 256, 10);
+    g.fillRect(0, 118, 256, 10);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.ClampToEdgeWrapping;
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 8;
+    this._dirtMap = tex;
+    return tex;
+  }
+
+  _filletRoute(points) {
+    if (points.length < 3) return points.map((p) => p.clone());
+    const out = [points[0].clone()];
+    for (let i = 1; i < points.length - 1; i += 1) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      const next = points[i + 1];
+      const d0 = curr.clone().sub(prev);
+      const d1 = next.clone().sub(curr);
+      const len0 = d0.length();
+      const len1 = d1.length();
+      if (len0 < 0.05 || len1 < 0.05) {
+        out.push(curr.clone());
+        continue;
+      }
+      d0.multiplyScalar(1 / len0);
+      d1.multiplyScalar(1 / len1);
+      const angle = Math.acos(THREE.MathUtils.clamp(d0.dot(d1), -1, 1));
+      if (angle < 0.35) {
+        out.push(curr.clone());
+        continue;
+      }
+      const cut = Math.min(1.3, len0 * 0.45, len1 * 0.45);
+      const a = curr.clone().addScaledVector(d0, -cut);
+      const b = curr.clone().addScaledVector(d1, cut);
+      for (let s = 0; s <= 5; s += 1) {
+        const t = s / 5;
+        const u = 1 - t;
+        out.push(new THREE.Vector3()
+          .addScaledVector(a, u * u)
+          .addScaledVector(curr, 2 * u * t)
+          .addScaledVector(b, t * t));
+      }
+    }
+    out.push(points[points.length - 1].clone());
+    return out;
+  }
+
+  _pathCenterline(mesh) {
+    mesh.updateWorldMatrix(true, false);
+    const pos = mesh.geometry.attributes.position;
+    if (!pos || pos.count < 9) return [];
+    const e = mesh.matrixWorld.elements;
+    const world = (i) => {
+      const x = pos.getX(i);
+      const y = pos.getY(i);
+      const z = pos.getZ(i);
+      return new THREE.Vector3(
+        e[0] * x + e[4] * y + e[8] * z + e[12],
+        e[1] * x + e[5] * y + e[9] * z + e[13],
+        e[2] * x + e[6] * y + e[10] * z + e[14]
+      );
+    };
+    const rings = [];
+    const ring = pos.count % 9 === 0 ? 9 : 1;
+    for (let i = 0; i < pos.count; i += ring) {
+      const c = new THREE.Vector3();
+      const n = Math.min(ring, pos.count - i);
+      for (let k = 0; k < n; k += 1) c.add(world(i + k));
+      c.multiplyScalar(1 / n);
+      const prev = rings[rings.length - 1];
+      if (!prev || prev.distanceTo(c) > 0.2) rings.push(c);
+    }
+    if (rings.length < 2) return [];
+    const out = [rings[0].clone()];
+    for (let i = 1; i < rings.length; i += 1) {
+      const a = rings[i - 1];
+      const b = rings[i];
+      const steps = Math.max(1, Math.ceil(a.distanceTo(b) / 1.5));
+      for (let s = 1; s <= steps; s += 1) out.push(a.clone().lerp(b, s / steps));
+    }
+    return out;
+  }
+
+  _sameRoute(a, b) {
+    const step = Math.max(1, Math.floor(a.length / 8));
+    let sum = 0;
+    let n = 0;
+    for (let i = 0; i < a.length; i += step) {
+      let best = Infinity;
+      for (let j = 0; j < b.length; j += 1) {
+        const dx = a[i].x - b[j].x;
+        const dz = a[i].z - b[j].z;
+        const d = dx * dx + dz * dz;
+        if (d < best) best = d;
+      }
+      sum += Math.sqrt(best);
+      n += 1;
+    }
+    return sum / n < 0.75;
+  }
+
+  _addDirtRoad(points, index) {
+    const route = this._filletRoute(points);
+    const half = 1.2;
+    const positions = [];
+    const uvs = [];
+    const indices = [];
+    let dist = 0;
+    route.forEach((p, i) => {
+      const prev = route[Math.max(0, i - 1)];
+      const next = route[Math.min(route.length - 1, i + 1)];
+      const inDir = p.clone().sub(prev);
+      const outDir = next.clone().sub(p);
+      if (inDir.lengthSq() < 1e-6) inDir.copy(outDir);
+      if (outDir.lengthSq() < 1e-6) outDir.copy(inDir);
+      inDir.normalize();
+      outDir.normalize();
+      const tangent = inDir.clone().add(outDir);
+      if (tangent.lengthSq() < 1e-6) tangent.copy(outDir);
+      tangent.normalize();
+      const px = -tangent.z;
+      const pz = tangent.x;
+      const inPx = -inDir.z;
+      const inPz = inDir.x;
+      const denom = px * inPx + pz * inPz;
+      const miter = THREE.MathUtils.clamp(1 / Math.max(0.4, Math.abs(denom)), 1, 1.8);
+      const y = p.y + 0.035 + index * 0.003;
+      const span = half * miter;
+      positions.push(p.x + px * span, y, p.z + pz * span);
+      positions.push(p.x - px * span, y, p.z - pz * span);
+      if (i > 0) dist += p.distanceTo(route[i - 1]);
+      const u = dist / 2.4;
+      uvs.push(u, 0, u, 1);
+    });
+    for (let i = 0; i < route.length - 1; i += 1) {
+      const a = i * 2;
+      indices.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    geo.setIndex(indices);
+    geo.computeVertexNormals();
+    const mat = new THREE.MeshStandardMaterial({
+      map: this._dirtTexture(),
+      roughness: 0.96,
+      metalness: 0,
+      polygonOffset: true,
+      polygonOffsetFactor: -1,
+      polygonOffsetUnits: -1,
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.name = `DIRT_Road_${index}`;
+    mesh.receiveShadow = true;
+    mesh.castShadow = false;
+    this.scene.add(mesh);
+  }
+
+  _setupDirtRoads() {
+    const meshes = [];
+    this.scene.traverse((o) => {
+      if (o.isMesh && (/^PATH_/i.test(o.name) || o.name === 'FARM_Path')) meshes.push(o);
+    });
+    const routes = [];
+    meshes.forEach((mesh) => {
+      if (mesh.name === 'FARM_Path') {
+        mesh.material = new THREE.MeshStandardMaterial({
+          map: this._dirtTexture(),
+          roughness: 0.96,
+          metalness: 0,
+        });
+        return;
+      }
+      const pts = this._pathCenterline(mesh);
+      mesh.visible = false;
+      if (pts.length < 2) return;
+      if (routes.some((route) => this._sameRoute(pts, route))) return;
+      routes.push(pts);
+      this._addDirtRoad(pts, routes.length - 1);
+    });
+    this.roadRoutes = routes;
+  }
+
+  _connectRoadToHut() {
+    if (!this.roadRoutes || !this.roadRoutes.length) return;
+    let door = null;
+    let hut = null;
+    this.scene.traverse((o) => {
+      if (!door && o.name === 'HUT_Door') door = o;
+      if (!hut && o.name === 'HUT_Root') hut = o;
+    });
+    if (!door) return;
+    const doorPos = this._worldPos(door);
+    const center = hut ? this._worldPos(hut) : doorPos.clone();
+    const forward = doorPos.clone().sub(center);
+    forward.y = 0;
+    if (forward.lengthSq() < 0.01) forward.set(0, 0, 1);
+    forward.normalize();
+
+    let best = null;
+    let bestD = Infinity;
+    this.roadRoutes.forEach((route) => {
+      for (let i = 0; i < route.length - 1; i += 1) {
+        const a = route[i];
+        const b = route[i + 1];
+        const abx = b.x - a.x;
+        const abz = b.z - a.z;
+        const len2 = abx * abx + abz * abz;
+        let t = 0;
+        if (len2 > 1e-6) {
+          t = ((doorPos.x - a.x) * abx + (doorPos.z - a.z) * abz) / len2;
+          t = Math.max(0, Math.min(1, t));
+        }
+        const x = a.x + abx * t;
+        const z = a.z + abz * t;
+        const dx = x - doorPos.x;
+        const dz = z - doorPos.z;
+        if (dx * forward.x + dz * forward.z < 0.4) continue;
+        const d = Math.hypot(dx, dz);
+        if (d < bestD) {
+          bestD = d;
+          best = new THREE.Vector3(x, a.y + (b.y - a.y) * t, z);
+        }
+      }
+    });
+    if (!best) return;
+    const end = doorPos.clone().addScaledVector(forward, 0.45);
+    end.y = best.y;
+    this._addDirtRoad([best, end], this.roadRoutes.length);
   }
 
   _fixMaterials(root) {
@@ -357,7 +739,10 @@ export class SimViewer {
       const root = gltf.scene;
       this._fixMaterials(root);
       this.scene.add(root);
+      this._sceneMounted = true;
       this._ensureWell();
+      this._setupWater();
+      this._setupDirtRoads();
 
       const box = new THREE.Box3().setFromObject(root);
       const center = box.getCenter(new THREE.Vector3());
@@ -389,6 +774,14 @@ export class SimViewer {
 
       this.followId = this.kidDefs[0]?.id || null;
       this._applyPathTime(this.dayHour);
+      this._placeHut();
+      this._seatHangingTrees();
+      this._connectRoadToHut();
+      this._bindSharedHouse();
+      this.kidDefs.forEach((def) => {
+        const r = this.kidRoots.get(def.id);
+        if (r) this._retargetHome(r, def);
+      });
       // Init prev positions after first path scrub
       this.kidDefs.forEach((def) => {
         const r = this.kidRoots.get(def.id);
@@ -405,8 +798,13 @@ export class SimViewer {
         kids: this.kidDefs.map((k) => ({ id: k.id, name: k.name, color: cssColor(k.color) })),
         locations: Object.keys(LOCATION_COORDS),
       });
-      this._animate();
+      this._kickLoop();
     } catch (e) {
+      if (!this._loadRetried && !this._sceneMounted) {
+        this._loadRetried = true;
+        console.warn('[SimViewer] scene load failed, retrying', e);
+        return this._load();
+      }
       console.error(e);
       this.onReady({ error: e.message || 'Failed to load simulation scene.' });
     }
@@ -419,16 +817,106 @@ export class SimViewer {
     return v;
   }
 
-  _animate = () => {
-    requestAnimationFrame(this._animate);
-    const dt = this.clock.getDelta();
+  _placeHut() {
+    let hut = null;
+    this.scene.traverse((o) => {
+      if (!hut && o.name === 'HUT_Root') hut = o;
+    });
+    if (!hut) return;
+    // The crossing sits on the yard center. Keep the hut on the grass beside it, door toward the road.
+    hut.position.set(6.2, hut.position.y, -0.2);
+    hut.rotation.y = -Math.PI / 2;
+    hut.updateWorldMatrix(true, true);
+    this.scene.traverse((o) => {
+      if (o.name === 'HOME_Yard') o.visible = false;
+    });
+  }
 
+  _seatHangingTrees() {
+    const groups = [];
+    this.scene.traverse((o) => {
+      if (/^GreyTree/i.test(o.name || '')) groups.push(o);
+    });
+    groups.forEach((group) => {
+      const box = new THREE.Box3().setFromObject(group);
+      if (box.min.y < 0.4) return;
+      group.position.y -= box.min.y - 0.05;
+      group.updateWorldMatrix(true, true);
+    });
+  }
+
+  _bindSharedHouse() {
+    let door = null;
+    this.scene.traverse((o) => {
+      if (!door && o.name === 'HUT_Door') door = o;
+    });
+    const doorPos = door ? this._worldPos(door) : LOCATION_COORDS.Home.clone();
+    let hut = null;
+    this.scene.traverse((o) => {
+      if (!hut && o.name === 'HUT_Root') hut = o;
+    });
+    const center = hut ? this._worldPos(hut) : doorPos.clone();
+    const forward = doorPos.clone().sub(center);
+    forward.y = 0;
+    if (forward.lengthSq() < 0.01) forward.set(0, 0, 1);
+    forward.normalize();
+    const side = new THREE.Vector3(-forward.z, 0, forward.x);
+    const slots = [0, 1, 2].map((i) => {
+      const along = i === 2 ? 2.25 : 1.15;
+      const across = i === 0 ? -1.05 : i === 1 ? 1.05 : 0;
+      return new THREE.Vector3(
+        doorPos.x + forward.x * along + side.x * across,
+        0.05,
+        doorPos.z + forward.z * along + side.z * across
+      );
+    });
+    this.homeAnchors = new Map();
+    this.houseSlots = new Map();
+    this.kidDefs.forEach((def, i) => {
+      const root = this.kidRoots.get(def.id);
+      if (!root) return;
+      this.homeAnchors.set(def.id, this._worldPos(root).clone());
+      this.houseSlots.set(def.id, slots[i] || slots[0]);
+    });
+  }
+
+  _retargetHome(root, def) {
+    const anchor = this.homeAnchors?.get(def.id);
+    const slot = this.houseSlots?.get(def.id);
+    if (!anchor || !slot) return;
+    const pos = this._worldPos(root);
+    const reach = THREE.MathUtils.clamp(anchor.distanceTo(slot) + 1.2, 4, 8);
+    const d = Math.hypot(pos.x - anchor.x, pos.z - anchor.z);
+    const influence = 1 - THREE.MathUtils.smoothstep(d, 0.8, reach);
+    if (influence < 0.001) return;
+    const target = new THREE.Vector3(
+      THREE.MathUtils.lerp(pos.x, slot.x, influence),
+      pos.y,
+      THREE.MathUtils.lerp(pos.z, slot.z, influence)
+    );
+    root.parent.updateWorldMatrix(true, false);
+    root.parent.worldToLocal(target);
+    root.position.x = target.x;
+    root.position.z = target.z;
+  }
+
+  _animate = () => {
+    this._loopQueued = false;
+    this._kickLoop();
+    if (this._contextLost) return;
+    const dt = Math.min(this.clock.getDelta(), 0.05);
+
+    try {
     if (this.playing && this.meta) {
       this.dayHour += (dt * this.speed * 2.5) / 60;
       if (this.dayHour >= this.meta.day_end_hour) this.dayHour = this.meta.day_start_hour;
     }
 
     this._applyPathTime(this.dayHour);
+    this.kidDefs.forEach((def) => {
+      const root = this.kidRoots.get(def.id);
+      if (root) this._retargetHome(root, def);
+    });
 
     // Soft separation so kids don't fuse when paths overlap
     const roots = this.kidDefs
@@ -529,6 +1017,15 @@ export class SimViewer {
       }
     }
 
+    if (this.waterMats) {
+      const time = this.clock.elapsedTime;
+      const sun = this.sun.position;
+      this.waterMats.forEach((mat) => {
+        mat.uniforms.uTime.value = time;
+        mat.uniforms.uSun.value.set(sun.x, sun.y, sun.z).normalize();
+      });
+    }
+
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
 
@@ -542,6 +1039,11 @@ export class SimViewer {
       kids: states,
       progress: (this.dayHour - start) / (end - start),
     });
+    } catch (err) {
+      const gl = this.renderer.getContext();
+      if (gl && gl.isContextLost()) this._contextLost = true;
+      else console.error(err);
+    }
   };
 
   resize() {
@@ -549,6 +1051,7 @@ export class SimViewer {
     if (!parent) return;
     const w = parent.clientWidth;
     const h = parent.clientHeight;
+    if (w < 2 || h < 2) return;
     this.camera.aspect = w / Math.max(h, 1);
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(w, h, false);
@@ -587,5 +1090,29 @@ export class SimViewer {
     this.freeLook = true;
     this.controls.target.set(co.x, 1.5, co.z);
     this.camera.position.set(co.x - 12, 14, co.z + 14);
+  }
+
+  nudgeView(yaw, pitch) {
+    this.freeLook = true;
+    const offset = this.camera.position.clone().sub(this.controls.target);
+    const spherical = new THREE.Spherical().setFromVector3(offset);
+    spherical.theta += yaw;
+    spherical.phi = THREE.MathUtils.clamp(spherical.phi + pitch, 0.2, Math.PI * 0.48);
+    offset.setFromSpherical(spherical);
+    this.camera.position.copy(this.controls.target).add(offset);
+    this.controls.update();
+  }
+
+  zoomBy(scale) {
+    this.freeLook = true;
+    const offset = this.camera.position.clone().sub(this.controls.target);
+    const dist = THREE.MathUtils.clamp(
+      offset.length() * scale,
+      this.controls.minDistance,
+      this.controls.maxDistance
+    );
+    offset.setLength(dist);
+    this.camera.position.copy(this.controls.target).add(offset);
+    this.controls.update();
   }
 }

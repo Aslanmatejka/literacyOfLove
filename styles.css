@@ -147,6 +147,19 @@ body {
     height: 100%;
     object-fit: cover;
     pointer-events: none;
+    border: 0;
+}
+
+/* YouTube iframe does not honor object-fit; scale a 16:9 frame to cover the hero */
+.hero-video iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 56.25vw;
+    min-width: 177.78vh;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
 }
 
 .hero-overlay {
@@ -415,9 +428,10 @@ body {
 
 .poverty-solutions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
     margin: 3rem 0;
+    align-items: stretch;
 }
 
 .solution-item {
@@ -1354,9 +1368,10 @@ body {
 
 .levels-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
     margin-top: 3rem;
+    align-items: stretch;
 }
 
 .level-card {
@@ -1368,6 +1383,9 @@ body {
     border: 2px solid transparent;
     transition: all 0.3s ease;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .level-card:hover {
@@ -1377,7 +1395,11 @@ body {
 
 .level-card.popular {
     border-color: #e74c3c;
-    transform: scale(1.05);
+}
+
+.level-card .btn {
+    margin-top: auto;
+    align-self: center;
 }
 
 .popular-badge {
@@ -1421,6 +1443,7 @@ body {
     list-style: none;
     padding: 0;
     margin: 2rem 0;
+    flex: 1;
 }
 
 .level-features li {
@@ -3357,12 +3380,13 @@ p { color: var(--text-soft); }
 .poverty-section .section-head { margin-bottom: 3rem; }
 .poverty-intro { font-size: 1.1rem; margin-top: 0.5rem; }
 .poverty-solutions {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.5rem;
 }
 .solution-item {
     text-align: left;
     padding: 1.75rem;
+    height: 100%;
 }
 .solution-item h3 {
     margin-bottom: 0.5rem;
@@ -5720,6 +5744,9 @@ body.panorama-open { overflow: hidden; }
     .poverty-solutions {
         gap: 1rem;
     }
+    .poverty-solutions {
+        grid-template-columns: 1fr;
+    }
     .cta-item,
     .action-card,
     .solution-item {
@@ -6236,9 +6263,9 @@ body.panorama-open { overflow: hidden; }
     box-shadow: var(--sh-3, 0 18px 40px rgba(15,27,45,0.14));
     background: #9ec4e0;
     touch-action: none;
-    cursor: grab;
+    cursor: default;
 }
-.sim3d-viewport:active { cursor: grabbing; }
+.sim3d-viewport:active { cursor: default; }
 .sim3d-viewport canvas {
     display: block;
     width: 100%;
@@ -6274,17 +6301,27 @@ body.panorama-open { overflow: hidden; }
     backdrop-filter: blur(8px);
 }
 .sim3d-hud__follow strong { color: var(--honey-300, #f0c56d); }
-.sim3d-hint {
+.sim3d-nav {
     position: absolute; bottom: 12px; left: 12px;
-    display: flex; gap: 0.65rem;
-    font-size: 0.7rem; font-weight: 600;
-    color: rgba(255,255,255,0.9);
-    pointer-events: none; z-index: 3;
+    display: flex; gap: 0.35rem;
+    z-index: 3;
 }
-.sim3d-hint span {
-    background: rgba(15,27,45,0.5);
-    padding: 0.25rem 0.55rem;
-    border-radius: 999px;
+.sim3d-nav__btn {
+    appearance: none;
+    width: 40px; height: 40px;
+    display: grid; place-items: center;
+    border: 0; border-radius: 12px;
+    background: rgba(15, 27, 45, 0.78);
+    color: #fff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+}
+.sim3d-nav__btn:hover { background: rgba(15, 27, 45, 0.92); }
+.sim3d-nav__btn i { pointer-events: none; }
+.sim3d-nav__btn:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
 }
 
 .sim3d-panel {
