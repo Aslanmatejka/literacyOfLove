@@ -5379,12 +5379,21 @@ body.panorama-open { overflow: hidden; }
     position: relative;
     background: var(--ink-900);
     aspect-ratio: 16 / 9;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    box-shadow: var(--sh-2);
 }
-.ambassador-video__player video {
+.ambassador-video__player video,
+.ambassador-video__player iframe {
     width: 100%;
     height: 100%;
     display: block;
     object-fit: cover;
+    border: 0;
+}
+.ambassador-video__player iframe {
+    position: absolute;
+    inset: 0;
 }
 .ambassador-video--featured .ambassador-video__player { aspect-ratio: auto; min-height: 280px; }
 .ambassador-video__info {

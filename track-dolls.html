@@ -173,63 +173,16 @@
             <div class="section-head">
                 <span class="eyebrow">Watch the journey</span>
                 <h2 class="section-title">Stories under two minutes.</h2>
-                <p class="section-lead">Meet the program, then follow each Ambassador through a real slice of life.</p>
+                <p class="section-lead">A short story from the village.</p>
             </div>
 
-            <article class="ambassador-video ambassador-video--featured" id="video-overview">
-                <div class="ambassador-video__player">
-                    <video controls preload="metadata" playsinline poster="images/ambassadar.jpg">
-                        <source src="images/herovid.mp4" type="video/mp4">
-                    </video>
-                </div>
-                <div class="ambassador-video__info">
-                    <span class="ambassador-video__badge">Program overview</span>
-                    <h3>How Ambassador Dolls work</h3>
-                    <p>A handmade doll becomes a traveling token of love — adopted by you, carried by a child, and followed through updates from Uganda.</p>
-                    <span class="ambassador-video__meta"><i class="fas fa-clock" aria-hidden="true"></i> Under 2 min</span>
-                </div>
-            </article>
-
-            <div class="ambassador-video-grid">
-                <article class="ambassador-video ambassador-video--doll" id="video-amina" style="--doll-color:#eb593f">
-                    <div class="ambassador-video__player">
-                        <video controls preload="metadata" playsinline poster="images/adam.jpg">
-                            <source src="images/WhatsApp Video 2025-08-09 at 18.23.03_044909f1.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                    <div class="ambassador-video__info">
-                        <img class="ambassador-video__avatar" src="images/adam.jpg" alt="" width="44" height="44">
-                        <h3>Amina&rsquo;s journey</h3>
-                        <p>Well, school, farm, woods, and market — her doll rides along.</p>
-                        <span class="ambassador-video__meta"><i class="fas fa-clock" aria-hidden="true"></i> Under 2 min</span>
-                    </div>
-                </article>
-                <article class="ambassador-video ambassador-video--doll" id="video-kofi" style="--doll-color:#408cf2">
-                    <div class="ambassador-video__player">
-                        <video controls preload="metadata" playsinline poster="images/rita.jpg">
-                            <source src="images/WhatsApp Video 2025-08-25 at 04.24.53_b77fd868.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                    <div class="ambassador-video__info">
-                        <img class="ambassador-video__avatar" src="images/rita.jpg" alt="" width="44" height="44">
-                        <h3>Kofi&rsquo;s journey</h3>
-                        <p>Kindling at dawn, classes, afternoon water, then the farm.</p>
-                        <span class="ambassador-video__meta"><i class="fas fa-clock" aria-hidden="true"></i> Under 2 min</span>
-                    </div>
-                </article>
-                <article class="ambassador-video ambassador-video--doll" id="video-sena" style="--doll-color:#40c773">
-                    <div class="ambassador-video__player">
-                        <video controls preload="metadata" playsinline poster="images/kudra.jpg">
-                            <source src="images/herovid.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                    <div class="ambassador-video__info">
-                        <img class="ambassador-video__avatar" src="images/kudra.jpg" alt="" width="44" height="44">
-                        <h3>Sena&rsquo;s journey</h3>
-                        <p>Market lunch run, crops in the afternoon, wood before dusk.</p>
-                        <span class="ambassador-video__meta"><i class="fas fa-clock" aria-hidden="true"></i> Under 2 min</span>
-                    </div>
-                </article>
+            <div class="ambassador-video__player">
+                <iframe
+                    src="https://www.youtube.com/embed/wYPa7ZDxPgs"
+                    title="Stories under two minutes"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                    loading="lazy"></iframe>
             </div>
         </div>
     </section>
@@ -558,7 +511,7 @@
         qrScript.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js';
         qrScript.onload = () => {
             grid.querySelectorAll('.nametag__qr-canvas').forEach((canvas) => {
-                QRCode.toCanvas(canvas, baseUrl + '#video-' + canvas.dataset.slug, {
+                QRCode.toCanvas(canvas, baseUrl + '#ambassador-videos', {
                     width: 108, margin: 1, color: { dark: '#0f1b2d', light: '#ffffff' }
                 });
             });
