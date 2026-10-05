@@ -845,7 +845,7 @@ function bootNameTags(kids) {
     card.style.setProperty('--tag-color', d.colorHex);
     card.innerHTML = `
       <div class="nametag__header">
-        <img class="nametag__logo" src="images/logo.jpg" alt="" width="28" height="28">
+        <img class="nametag__logo" src="images/logo-mark.png" alt="">
         <span class="nametag__brand">Literacy of Love</span>
         <span class="nametag__badge">Ambassador</span>
       </div>

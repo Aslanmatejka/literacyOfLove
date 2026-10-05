@@ -53,7 +53,11 @@ if (hamburger && navMenu) {
         } else {
             closeMenu();
             if (navContainer && navMenu.parentElement !== navContainer) {
-                navContainer.insertBefore(navMenu, hamburger);
+                if (hamburger && hamburger.parentElement === navContainer) {
+                    navContainer.insertBefore(navMenu, hamburger);
+                } else {
+                    navContainer.appendChild(navMenu);
+                }
             }
         }
     }
@@ -83,7 +87,7 @@ if (hamburger && navMenu) {
         navBackdrop = document.createElement('div');
         navBackdrop.className = 'nav-backdrop';
         navBackdrop.setAttribute('aria-hidden', 'true');
-        document.body.insertBefore(navBackdrop, navMenu);
+        document.body.appendChild(navBackdrop);
     }
     navBackdrop.addEventListener('click', closeMenu);
 
@@ -110,12 +114,11 @@ document.addEventListener('click', (e) => {
 
 /* ---------- Navbar scroll effect ---------- */
 const navbar = $('.navbar');
-let lastScrollY = window.scrollY;
 window.addEventListener('scroll', () => {
     if (!navbar) return;
     navbar.classList.toggle('scrolled', window.scrollY > 30);
-    lastScrollY = window.scrollY;
 }, { passive: true });
+if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 30);
 
 /* ---------- Smooth scrolling for in-page anchors ---------- */
 $$('a[href^="#"]').forEach(anchor => {

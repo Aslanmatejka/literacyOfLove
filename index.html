@@ -21,7 +21,7 @@
         <div class="nav-container">
             <div class="nav-logo">
                 <a href="index.html" aria-label="Literacy of Love — Home">
-                    <img src="images/logo.jpg" alt="" class="logo-img">
+                    <img src="images/logo-mark.png" alt="" class="logo-img">
                     <h2>Literacy of Love</h2>
                 </a>
             </div>
@@ -47,7 +47,8 @@
     <section id="home" class="hero">
         <div class="hero-video" aria-hidden="true">
             <iframe
-                src="https://www.youtube.com/embed/-QURzo8PAzI?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=-QURzo8PAzI&amp;controls=0&amp;modestbranding=1&amp;playsinline=1&amp;rel=0&amp;cc_load_policy=0"
+                src="https://www.youtube.com/embed/-QURzo8PAzI?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=-QURzo8PAzI&amp;controls=0&amp;modestbranding=1&amp;playsinline=1&amp;rel=0&amp;cc_load_policy=0&amp;iv_load_policy=3&amp;enablejsapi=1"
+                id="hero-youtube"
                 title="Sponsorship Commercial Literacy of Love Aug 26"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerpolicy="strict-origin-when-cross-origin"
@@ -58,13 +59,13 @@
             <div class="hero-content">
                 <span class="eyebrow eyebrow-light">A 501(c)(3) non-profit · Uganda &amp; USA</span>
                 <h1 class="hero-title">They are the reason.</h1>
+                <p class="hero-line">Every ounce of love causes a ripple of change. Be the change.</p>
                 <p class="hero-subtitle">We are seeking change. It begins with hope and faith, then transforms love into action. Will you help? We are more powerful together.</p>
                 <div class="hero-buttons">
                     <a href="donate.html" class="btn btn-primary">
                         <i class="fas fa-heart" aria-hidden="true"></i>
                         Give Hope
                     </a>
-                    <a href="#about" class="btn btn-secondary">Learn More</a>
                 </div>
                 <ul class="hero-trust" aria-label="Why people trust us">
                     <li><i class="fas fa-shield-heart" aria-hidden="true"></i> 100% direct impact</li>
@@ -450,5 +451,37 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        (function () {
+            var frame = document.getElementById('hero-youtube');
+            if (!frame) return;
+            var stopCaptions = function (player) {
+                try {
+                    if (player.getOptions && player.getOptions().indexOf('captions') === -1) return;
+                    player.setOption('captions', 'track', {});
+                } catch (e) {}
+            };
+            window.onYouTubeIframeAPIReady = function () {
+                new YT.Player('hero-youtube', {
+                    events: {
+                        onReady: function (event) {
+                            window.__heroPlayer = event.target;
+                            stopCaptions(event.target);
+                        },
+                        onApiChange: function (event) {
+                            window.__heroPlayer = event.target;
+                            stopCaptions(event.target);
+                        },
+                        onStateChange: function (event) {
+                            if (event.data === 1) stopCaptions(event.target);
+                        }
+                    }
+                });
+            };
+            var yt = document.createElement('script');
+            yt.src = 'https://www.youtube.com/iframe_api';
+            document.head.appendChild(yt);
+        })();
+    </script>
 </body>
 </html>
