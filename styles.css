@@ -985,7 +985,7 @@ body {
 .page-hero {
     height: 60vh;
     background: linear-gradient(135deg, rgba(74, 144, 226, 0.9), rgba(80, 200, 120, 0.9)), 
-                url('images/20230706_170912.jpg') center/cover;
+                url('images/20230706_180017.jpg') center/cover;
     display: flex;
     align-items: center;
     position: relative;
@@ -3040,7 +3040,7 @@ p { color: var(--text-soft); }
 .page-hero--shop {
     background:
         linear-gradient(120deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.30) 60%, rgba(0,0,0,0.40) 100%),
-        url('https://github.com/Aslanmatejka/my-public-assets/blob/main/crafts%20made%20by%20kudra.jpeg?raw=true') center/cover;
+        url('images/ugandancrafts.jpg') center/cover;
 }
 .page-hero .container {
     text-align: center;
@@ -4187,7 +4187,7 @@ img.loaded { opacity: 1; }
     text-align: center;
     background:
         linear-gradient(135deg, rgba(15,92,94,0.95), rgba(15,27,45,0.95)),
-        url('images/family.jpg') center/cover fixed;
+        url('images/family.jpg') center/cover;
     color: #fff;
 }
 .gallery-cta h2 {
@@ -5526,6 +5526,19 @@ body.panorama-open { overflow: hidden; }
     transition: transform var(--t-med) var(--ease);
 }
 .ambassador-gallery-item:hover img { transform: scale(1.04); }
+.ambassador-gallery-item--video {
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+    background: #0f1b2d;
+}
+.ambassador-gallery-item--video video {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+    background: #111;
+}
 .ambassador-gallery-item figcaption {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -5534,6 +5547,10 @@ body.panorama-open { overflow: hidden; }
     font-weight: 600;
     color: #fff;
     background: linear-gradient(transparent, rgba(0,0,0,0.72));
+}
+.ambassador-gallery-item--video figcaption {
+    position: static;
+    background: #0f1b2d;
 }
 .ambassador-gallery-cta {
     text-align: center;

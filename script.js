@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 obs.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0, rootMargin: '80px 0px' });
     revealTargets.forEach(el => observer.observe(el));
 });
 
