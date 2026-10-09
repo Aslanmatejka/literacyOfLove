@@ -1112,8 +1112,18 @@ body {
 }
 
 .need-item ul li {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
     padding: 0.5rem 0;
     border-bottom: 1px solid #eee;
+}
+.need-item ul li i {
+    font-size: 1rem;
+    width: 1.25rem;
+    margin: 0;
+    flex-shrink: 0;
+    text-align: center;
 }
 
 .amount {
@@ -5532,11 +5542,13 @@ body.panorama-open { overflow: hidden; }
     flex-direction: column;
     background: #0f1b2d;
 }
-.ambassador-gallery-item--video video {
+.ambassador-gallery-item--video video,
+.ambassador-gallery-item--video iframe {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
     display: block;
+    border: 0;
     background: #111;
 }
 .ambassador-gallery-item figcaption {
