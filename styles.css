@@ -1726,6 +1726,27 @@ body {
     margin-top: 1.5rem;
 }
 
+.action-shopping .action-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.action-shopping .action-video {
+    grid-column: span 2;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #0f1b2d;
+    min-height: 0;
+}
+.action-shopping .action-video iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    border: 0;
+}
+@media (max-width: 768px) {
+    .action-shopping .action-grid { grid-template-columns: 1fr; }
+    .action-shopping .action-video { grid-column: auto; }
+}
+
 .btn-small {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
