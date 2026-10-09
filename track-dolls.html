@@ -199,20 +199,24 @@
                     </div>
             <div class="ambassador-gallery-grid">
                 <figure class="ambassador-gallery-item ambassador-gallery-item--video">
-                    <iframe src="https://www.youtube.com/embed/U5blHOSXvwU" title="Farm" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+                    <iframe src="https://www.youtube.com/embed/U5blHOSXvwU?enablejsapi=1&amp;rel=0" title="Farm" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     <figcaption>Farm</figcaption>
                 </figure>
                 <figure class="ambassador-gallery-item ambassador-gallery-item--video">
-                    <iframe src="https://www.youtube.com/embed/M6mC8MO_0tM" title="School" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+                    <iframe src="https://www.youtube.com/embed/M6mC8MO_0tM?enablejsapi=1&amp;rel=0" title="School" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     <figcaption>School</figcaption>
                 </figure>
                 <figure class="ambassador-gallery-item ambassador-gallery-item--video">
-                    <iframe src="https://www.youtube.com/embed/_nQtZnWSw_Y" title="Water" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+                    <iframe src="https://www.youtube.com/embed/_nQtZnWSw_Y?enablejsapi=1&amp;rel=0" title="Water" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     <figcaption>Water</figcaption>
                 </figure>
                 <figure class="ambassador-gallery-item ambassador-gallery-item--video">
-                    <iframe src="https://www.youtube.com/embed/NwLtjmUFH60" title="Market" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+                    <iframe src="https://www.youtube.com/embed/NwLtjmUFH60?enablejsapi=1&amp;rel=0" title="Market" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     <figcaption>Market</figcaption>
+                </figure>
+                <figure class="ambassador-gallery-item ambassador-gallery-item--video">
+                    <iframe src="https://www.youtube.com/embed/ButugHIVoZ4?enablejsapi=1&amp;rel=0" title="Firewood" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+                    <figcaption>Firewood</figcaption>
                 </figure>
             </div>
         </div>
@@ -320,6 +324,58 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        const placePlayer = document.createElement('div');
+        placePlayer.className = 'place-player';
+        placePlayer.hidden = true;
+        placePlayer.innerHTML = `
+            <div class="place-player__backdrop" data-close></div>
+            <div class="place-player__frame" role="dialog" aria-modal="true" aria-label="Place video">
+                <button type="button" class="place-player__close" data-close aria-label="Close video">&times;</button>
+                <iframe allow="autoplay; encrypted-media; picture-in-picture" title=""></iframe>
+            </div>
+        `;
+        document.body.appendChild(placePlayer);
+        const placeFrame = placePlayer.querySelector('iframe');
+
+        function closePlacePlayer() {
+            placeFrame.src = 'about:blank';
+            placePlayer.hidden = true;
+            document.body.classList.remove('place-player-open');
+        }
+
+        placePlayer.addEventListener('click', (event) => {
+            if (event.target.closest('[data-close]')) closePlacePlayer();
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !placePlayer.hidden) closePlacePlayer();
+        });
+
+        document.querySelectorAll('.ambassador-gallery-item--video iframe').forEach((iframe) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'place-video';
+            iframe.parentNode.insertBefore(wrap, iframe);
+            wrap.appendChild(iframe);
+
+            const open = document.createElement('button');
+            open.type = 'button';
+            open.className = 'place-video__open';
+            open.setAttribute('aria-label', 'Play ' + (iframe.title || 'video'));
+            open.innerHTML = '<i class="fas fa-play" aria-hidden="true"></i>';
+            wrap.appendChild(open);
+
+            open.addEventListener('click', () => {
+                const url = new URL(iframe.src);
+                url.searchParams.set('autoplay', '1');
+                url.searchParams.set('rel', '0');
+                url.searchParams.delete('enablejsapi');
+                placeFrame.title = iframe.title || 'Video';
+                placeFrame.src = url.toString();
+                placePlayer.hidden = false;
+                document.body.classList.add('place-player-open');
+            });
+        });
+    </script>
     <script type="module">
         import { SimViewer } from './sim-viewer.js';
 
