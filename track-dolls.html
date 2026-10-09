@@ -222,18 +222,6 @@
         </div>
     </section>
 
-    <section class="ambassador-nametags" id="nametags">
-        <div class="container">
-            <div class="section-head">
-                <span class="eyebrow">Print &amp; attach</span>
-                <h2 class="section-title">Name tags with QR.</h2>
-                <p class="section-lead">Photo, bio, and a code that opens each child&rsquo;s journey video.</p>
-            </div>
-            <div class="nametag-grid" id="nametagGrid" aria-label="Ambassador name tags"></div>
-            <p class="nametag-print-hint"><i class="fas fa-print" aria-hidden="true"></i> Use Print on this page for clean name-tag sheets.</p>
-        </div>
-    </section>
-
     <section class="track-how">
         <div class="container">
             <div class="section-head">
@@ -518,53 +506,6 @@
         scrub.addEventListener('input', () => {
             viewer.setProgress(+scrub.value / 1000);
         });
-
-        // Name tags
-        const dolls = [
-            { slug: 'amina', name: 'Amina', photo: 'images/adam.jpg', color: '#eb593f',
-              bio: 'Fetches water at dawn, then school, farm, and market before evening.' },
-            { slug: 'kofi', name: 'Kofi', photo: 'images/rita.jpg', color: '#408cf2',
-              bio: 'Gathers kindling early, studies hard, helps on the farm after class.' },
-            { slug: 'sena', name: 'Sena', photo: 'images/kudra.jpg', color: '#40c773',
-              bio: 'Market errands at lunch, tends crops, brings wood home at dusk.' }
-        ];
-        const grid = document.getElementById('nametagGrid');
-        const baseUrl = location.href.split('#')[0];
-        dolls.forEach((d) => {
-            const card = document.createElement('article');
-            card.className = 'nametag';
-            card.style.setProperty('--tag-color', d.color);
-            card.innerHTML = `
-                <div class="nametag__header">
-                    <img class="nametag__logo" src="images/logo-mark.png" alt="">
-                    <span class="nametag__brand">Literacy of Love</span>
-                    <span class="nametag__badge">Ambassador</span>
-                </div>
-                <div class="nametag__body">
-                    <img class="nametag__photo" src="${d.photo}" alt="${d.name}" width="72" height="72" loading="lazy">
-                    <div class="nametag__info">
-                        <h3 class="nametag__name">${d.name}</h3>
-                        <p class="nametag__bio">${d.bio}</p>
-                    </div>
-                    <div class="nametag__qr">
-                        <canvas class="nametag__qr-canvas" data-slug="${d.slug}"></canvas>
-                        <span class="nametag__qr-label">Scan for video</span>
-                    </div>
-                </div>
-                <p class="nametag__footer">Village day &middot; literacyoflove.org</p>`;
-            grid.appendChild(card);
-        });
-
-        const qrScript = document.createElement('script');
-        qrScript.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js';
-        qrScript.onload = () => {
-            grid.querySelectorAll('.nametag__qr-canvas').forEach((canvas) => {
-                QRCode.toCanvas(canvas, baseUrl + '#ambassador-videos', {
-                    width: 108, margin: 1, color: { dark: '#0f1b2d', light: '#ffffff' }
-                });
-            });
-        };
-        document.body.appendChild(qrScript);
     </script>
 </body>
 </html>
