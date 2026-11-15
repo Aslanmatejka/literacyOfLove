@@ -191,7 +191,7 @@
         <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer"><i class="fas fa-times" aria-hidden="true"></i></button>
         <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous image"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
         <figure class="lightbox-figure">
-            <img src="" alt="" id="lightboxImg">
+            <img alt="" id="lightboxImg">
             <figcaption id="lightboxCaption"></figcaption>
         </figure>
         <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next image"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
@@ -315,7 +315,7 @@
             function closeLightbox() {
                 lightbox.hidden = true;
                 document.body.style.overflow = '';
-                lightboxImg.src = '';
+                lightboxImg.removeAttribute('src');
                 if (lastFocused) lastFocused.focus();
             }
 

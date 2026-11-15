@@ -22,6 +22,9 @@ function openMenu() {
 
 function closeMenu() {
     if (!hamburger || !navMenu) return;
+    /* Only act when the drawer is actually open; otherwise the scroll restore
+       below would jump the page (e.g. on every Escape press). */
+    if (!navMenu.classList.contains('active')) return;
     hamburger.classList.remove('active');
     navMenu.classList.remove('active');
     document.body.classList.remove('menu-open');
@@ -103,7 +106,7 @@ document.addEventListener('click', (e) => {
 /* ---------- Active nav link based on current page ---------- */
 (function highlightActiveNav() {
     const path = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
-    const pageKey = path === 'index' ? 'home' : path;
+    const pageKey = { index: 'home', 'track-dolls': 'track' }[path] || path;
     $$('.nav-link').forEach(link => {
         if (link.dataset.page === pageKey) {
             link.classList.add('is-active');
@@ -130,9 +133,14 @@ $$('a[href^="#"]').forEach(anchor => {
         e.preventDefault();
         const headerHeight = navbar ? navbar.offsetHeight : 0;
         window.scrollTo({
-            top: target.offsetTop - headerHeight - 8,
+            top: target.getBoundingClientRect().top + window.scrollY - headerHeight - 8,
             behavior: 'smooth'
         });
+        /* Move keyboard focus to the target (needed for the skip link) */
+        if (!target.matches('a[href], button, input, select, textarea, [tabindex]')) {
+            target.setAttribute('tabindex', '-1');
+        }
+        target.focus({ preventScroll: true });
     });
 });
 

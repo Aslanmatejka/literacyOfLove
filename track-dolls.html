@@ -76,15 +76,15 @@
                 <li class="track-orient__item">
                     <span class="track-orient__num">1</span>
                     <div>
-                        <h2>Orbit the village</h2>
-                        <p>Use the look and zoom buttons. Tap a place to fly there.</p>
+                        <h2>See it from every side</h2>
+                        <p>Drag to turn the whole village, scroll or pinch to zoom, right-drag to move.</p>
                     </div>
                 </li>
                 <li class="track-orient__item">
                     <span class="track-orient__num">2</span>
                     <div>
-                        <h2>Follow a child</h2>
-                        <p>Pick Amina, Kofi, or Sena — the camera tracks their path and chores.</p>
+                        <h2>Spot each child</h2>
+                        <p>Name tags show where Amina, Kofi, and Sena are and what they are doing.</p>
                     </div>
                 </li>
                 <li class="track-orient__item">
@@ -103,69 +103,53 @@
             <div class="section-head">
                 <span class="eyebrow">Interactive 3D day</span>
                 <h2 class="section-title">A village on the move.</h2>
-                <p class="section-lead">Your exact Blender village — buildings, paths, and Ambassadors — playing the same day schedule.</p>
+                <p class="section-lead">The whole village, live. Turn it around, zoom in close, and watch from any side as Amina, Kofi, and Sena go through their day.</p>
             </div>
 
-            <div class="sim3d-roster" id="sim3dRoster" role="radiogroup" aria-label="Follow a child"></div>
-
-            <div class="sim3d-shell">
+            <div class="sim3d-stage" id="sim3dStage">
                 <div class="sim3d-viewport" id="sim3dViewport">
-                    <canvas id="sim3dCanvas" aria-label="3D village simulation"></canvas>
+                    <canvas id="sim3dCanvas" tabindex="0" aria-label="3D village. Drag to look around, scroll or pinch to zoom, right-drag to move. With the keyboard: arrow keys move, Shift plus arrow keys turn, plus and minus zoom."></canvas>
                     <div class="sim3d-loading" id="sim3dLoading">
                         <div class="sim3d-loading__spin" aria-hidden="true"></div>
-                        <p>Loading your Blender simulation&hellip;<br><small>~25&nbsp;MB first load</small></p>
+                        <p>Loading the village&hellip;<br><small>~8&nbsp;MB first load</small></p>
                     </div>
-                    <div class="sim3d-hud">
-                        <div class="sim3d-hud__clock"><i class="fas fa-clock" aria-hidden="true"></i> <span id="sim3dClock">6:00 AM</span></div>
-                        <div class="sim3d-hud__follow">Following <strong id="sim3dFollowName">Amina</strong></div>
-                        </div>
-                    <div class="sim3d-nav" role="group" aria-label="Look around the village">
-                        <button type="button" class="sim3d-nav__btn" data-view="up" aria-label="Look up"><i class="fas fa-chevron-up" aria-hidden="true"></i></button>
-                        <button type="button" class="sim3d-nav__btn" data-view="left" aria-label="Turn left"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
-                        <button type="button" class="sim3d-nav__btn" data-view="zoom-in" aria-label="Zoom in"><i class="fas fa-search-plus" aria-hidden="true"></i></button>
-                        <button type="button" class="sim3d-nav__btn" data-view="zoom-out" aria-label="Zoom out"><i class="fas fa-search-minus" aria-hidden="true"></i></button>
-                        <button type="button" class="sim3d-nav__btn" data-view="right" aria-label="Turn right"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
-                        <button type="button" class="sim3d-nav__btn" data-view="down" aria-label="Look down"><i class="fas fa-chevron-down" aria-hidden="true"></i></button>
-                            </div>
-                        </div>
+                    <p class="sim3d-hint" id="sim3dHint" aria-hidden="true"><i class="fas fa-hand-pointer" aria-hidden="true"></i> Drag to look around &middot; Scroll or pinch to zoom</p>
+                </div>
 
-                <aside class="sim3d-panel" aria-label="Activity feed">
-                    <div class="sim3d-activity" id="sim3dActivity">
-                        <span class="sim3d-activity__badge" id="sim3dLocBadge">Home</span>
-                        <h3 class="sim3d-activity__title" id="sim3dActTitle">Wake / morning chores</h3>
-                        <p class="sim3d-activity__kid" id="sim3dActKid">Amina</p>
-                    </div>
-                    <div class="sim3d-feed">
-                        <h4>All Ambassadors</h4>
-                        <ul class="sim3d-feed__list" id="sim3dFeed"></ul>
-                            </div>
-                    <div class="sim3d-places" id="sim3dPlaces" aria-label="Jump to place"></div>
-                </aside>
+                <div class="sim3d-controls">
+                    <div class="sim3d-transport">
+                        <div class="sim3d-playback" role="group" aria-label="Playback">
+                            <button type="button" class="sim-btn" id="sim3dRewind" aria-label="Back to 6 AM">
+                                <i class="fas fa-backward-fast" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="sim-btn sim-btn--primary" id="sim3dPlay" aria-pressed="true" aria-label="Pause">
+                                <i class="fas fa-pause" id="sim3dPlayIcon" aria-hidden="true"></i>
+                                <span id="sim3dPlayLabel">Pause</span>
+                            </button>
+                            <div class="sim3d-clock"><i class="fas fa-clock" aria-hidden="true"></i> <span id="sim3dClock">6:00 AM</span></div>
                         </div>
+                        <div class="sim3d-speeds" role="group" aria-label="Speed">
+                            <button type="button" class="sim-speed__btn" data-speed="0.5">0.5x</button>
+                            <button type="button" class="sim-speed__btn is-active" data-speed="1">1x</button>
+                            <button type="button" class="sim-speed__btn" data-speed="2">2x</button>
+                            <button type="button" class="sim-speed__btn" data-speed="4">4x</button>
+                        </div>
+                        <div class="sim3d-view" role="group" aria-label="View">
+                            <button type="button" class="sim-icon-btn" id="sim3dLabels" aria-pressed="true"><i class="fas fa-tag" aria-hidden="true"></i><span>Names</span></button>
+                            <button type="button" class="sim-icon-btn" id="sim3dReset"><i class="fas fa-rotate-left" aria-hidden="true"></i><span>Whole village</span></button>
+                            <button type="button" class="sim-icon-btn" id="sim3dFullscreen" aria-pressed="false"><i class="fas fa-expand" aria-hidden="true"></i><span>Full screen</span></button>
+                        </div>
+                    </div>
+                    <div class="sim3d-scrub">
+                        <span class="sim3d-scrub__ends">6 AM</span>
+                        <input type="range" id="sim3dScrub" min="0" max="1000" value="0" step="1" aria-label="Time of day">
+                        <span class="sim3d-scrub__ends">8 PM</span>
+                    </div>
+                </div>
+            </div>
 
-            <div class="sim3d-controls">
-                <div class="sim3d-transport" role="group" aria-label="Playback">
-                    <button type="button" class="sim-btn" id="sim3dRewind" aria-label="Jump to morning">
-                        <i class="fas fa-backward-fast" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" class="sim-btn sim-btn--primary" id="sim3dPlay" aria-pressed="true" aria-label="Pause">
-                        <i class="fas fa-pause" id="sim3dPlayIcon" aria-hidden="true"></i>
-                        <span id="sim3dPlayLabel">Pause</span>
-                    </button>
-                    <div class="sim3d-speeds" role="group" aria-label="Speed">
-                        <button type="button" class="sim-speed__btn" data-speed="0.5">0.5x</button>
-                        <button type="button" class="sim-speed__btn is-active" data-speed="1">1x</button>
-                        <button type="button" class="sim-speed__btn" data-speed="2">2x</button>
-                        <button type="button" class="sim-speed__btn" data-speed="4">4x</button>
-                            </div>
-                            </div>
-                <div class="sim3d-scrub">
-                    <span class="sim3d-scrub__ends">6 AM</span>
-                    <input type="range" id="sim3dScrub" min="0" max="1000" value="0" step="1" aria-label="Scrub the day">
-                    <span class="sim3d-scrub__ends">8 PM</span>
-                            </div>
-                        </div>
-                    </div>
+            <div class="sim3d-roster" id="sim3dRoster" aria-label="Ambassadors right now"></div>
+        </div>
     </section>
 
     <section class="ambassador-media" id="ambassador-videos">
@@ -365,134 +349,109 @@
         });
     </script>
     <script type="module">
-        import { SimViewer } from './sim-viewer.js';
+        const $ = (id) => document.getElementById(id);
+        const showLoadError = (message) => {
+            $('sim3dLoading').classList.add('is-error');
+            $('sim3dLoading').querySelector('p').textContent = message;
+        };
 
-        const canvas = document.getElementById('sim3dCanvas');
-        const loading = document.getElementById('sim3dLoading');
-        const roster = document.getElementById('sim3dRoster');
-        const feed = document.getElementById('sim3dFeed');
-        const placesEl = document.getElementById('sim3dPlaces');
-        const clockEl = document.getElementById('sim3dClock');
-        const followName = document.getElementById('sim3dFollowName');
-        const actTitle = document.getElementById('sim3dActTitle');
-        const actKid = document.getElementById('sim3dActKid');
-        const locBadge = document.getElementById('sim3dLocBadge');
-        const scrub = document.getElementById('sim3dScrub');
-        const playBtn = document.getElementById('sim3dPlay');
-        const playIcon = document.getElementById('sim3dPlayIcon');
-        const playLabel = document.getElementById('sim3dPlayLabel');
+        // Three.js comes from a CDN; if it can't be reached, say so instead of spinning forever
+        let SimViewer;
+        try {
+            ({ SimViewer } = await import('./sim-viewer.js'));
+        } catch (err) {
+            showLoadError('The 3D village could not load. Check your connection and refresh the page.');
+            throw err;
+        }
+
+        const canvas = $('sim3dCanvas');
+        const stage = $('sim3dStage');
+        const loading = $('sim3dLoading');
+        const hint = $('sim3dHint');
+        const roster = $('sim3dRoster');
+        const clockEl = $('sim3dClock');
+        const scrub = $('sim3dScrub');
+        const playBtn = $('sim3dPlay');
+        const playIcon = $('sim3dPlayIcon');
+        const playLabel = $('sim3dPlayLabel');
+        const labelsBtn = $('sim3dLabels');
+        const resetBtn = $('sim3dReset');
+        const fullBtn = $('sim3dFullscreen');
+        const cards = new Map(); // kid id -> { btn, loc, act }
         let scrubbing = false;
+        let pinnedKid = null;
+        const setText = (el, value) => { if (el.textContent !== value) el.textContent = value; };
+        const hideHint = () => hint && hint.classList.add('is-hidden');
 
-        const PLACE_ICONS = {
-            Home: 'fa-house', School: 'fa-book-open', Farm: 'fa-seedling',
-            Shops: 'fa-store', Wood: 'fa-tree', Well: 'fa-tint'
+        /* Highlight a child's name tag in the 3D view (the camera stays free) */
+        const showKid = (id) => {
+            viewer.highlight(id);
+            cards.forEach((card, kidId) => card.btn.classList.toggle('is-active', kidId === id));
         };
 
         const viewer = new SimViewer(canvas, {
             scheduleUrl: 'simulation/web/schedule.json',
-            onReady({ kids, locations, error }) {
-                if (loading) loading.hidden = true;
+            onInteract: hideHint,
+            onReady({ kids, error }) {
                 if (error) {
-                    if (loading) {
-                        loading.hidden = false;
-                        loading.querySelector('p').textContent = error;
-                    }
+                    showLoadError(`The 3D village could not load (${error}). Please refresh the page.`);
                     return;
                 }
-                roster.innerHTML = '';
-                kids.forEach((k, i) => {
+                loading.hidden = true;
+                roster.replaceChildren();
+                kids.forEach((k) => {
                     const btn = document.createElement('button');
                     btn.type = 'button';
-                    btn.className = 'sim3d-kid' + (i === 0 ? ' is-active' : '');
-                    btn.setAttribute('role', 'radio');
-                    btn.setAttribute('aria-checked', i === 0 ? 'true' : 'false');
+                    btn.className = 'sim3d-kid';
+                    btn.setAttribute('aria-pressed', 'false');
                     btn.style.setProperty('--kc', k.color);
                     btn.innerHTML = `
-                        <span class="sim3d-kid__swatch"></span>
+                        <span class="sim3d-kid__swatch" aria-hidden="true"></span>
                         <span class="sim3d-kid__copy">
-                            <span class="sim3d-kid__role">Ambassador</span>
-                            <span class="sim3d-kid__name">${k.name}</span>
-                        </span>
-                        <span class="sim3d-kid__follow">Follow</span>`;
+                            <span class="sim3d-kid__name"></span>
+                            <span class="sim3d-kid__where"><i class="fas fa-location-dot" aria-hidden="true"></i> <span data-loc></span></span>
+                            <span class="sim3d-kid__act" data-act></span>
+                        </span>`;
+                    btn.querySelector('.sim3d-kid__name').textContent = k.name;
+                    btn.setAttribute('aria-label', `Show ${k.name} in the village`);
                     btn.addEventListener('click', () => {
-                        viewer.follow(k.id);
-                        roster.querySelectorAll('.sim3d-kid').forEach((el) => {
-                            el.classList.toggle('is-active', el === btn);
-                            el.setAttribute('aria-checked', el === btn ? 'true' : 'false');
-                        });
+                        pinnedKid = pinnedKid === k.id ? null : k.id;
+                        cards.forEach((card, id) => card.btn.setAttribute('aria-pressed', String(id === pinnedKid)));
+                        showKid(pinnedKid);
                     });
+                    btn.addEventListener('pointerenter', () => showKid(k.id));
+                    btn.addEventListener('pointerleave', () => showKid(pinnedKid));
                     roster.appendChild(btn);
+                    cards.set(k.id, { btn, loc: btn.querySelector('[data-loc]'), act: btn.querySelector('[data-act]') });
                 });
-
-                placesEl.innerHTML = '';
-                locations.forEach((name) => {
-                    const b = document.createElement('button');
-                    b.type = 'button';
-                    b.className = 'sim3d-place';
-                    b.innerHTML = `<i class="fas ${PLACE_ICONS[name] || 'fa-map-pin'}" aria-hidden="true"></i> ${name}`;
-                    b.addEventListener('click', () => viewer.jumpToLocation(name));
-                    placesEl.appendChild(b);
-                });
-
                 viewer.resize();
+                window.setTimeout(hideHint, 9000);
             },
             onTick(state) {
-                clockEl.textContent = state.clock;
-                if (!scrubbing) scrub.value = String(Math.round(state.progress * 1000));
-                const followed = state.kids.find((k) => k.id === state.followId) || state.kids[0];
-                if (followed) {
-                    followName.textContent = followed.name;
-                    actTitle.textContent = followed.activity;
-                    actKid.textContent = followed.name;
-                    locBadge.textContent = followed.location;
+                // Called every frame — only write to the DOM when a value changes
+                setText(clockEl, state.clock);
+                if (!scrubbing) {
+                    const v = String(Math.round(state.progress * 1000));
+                    if (scrub.value !== v) scrub.value = v;
                 }
-                feed.innerHTML = state.kids.map((k) => `
-                    <li class="sim3d-feed__item${k.id === state.followId ? ' is-active' : ''}" style="--kc:${k.color}">
-                        <strong>${k.name}</strong>
-                        <span>${k.location}</span>
-                        <em>${k.activity}</em>
-                    </li>`).join('');
+                state.kids.forEach((k) => {
+                    const card = cards.get(k.id);
+                    if (!card) return;
+                    setText(card.loc, k.location);
+                    setText(card.act, k.activity);
+                });
             }
-        });
-
-        const applyView = (view) => {
-            if (view === 'left') viewer.nudgeView(0.4, 0);
-            else if (view === 'right') viewer.nudgeView(-0.4, 0);
-            else if (view === 'up') viewer.nudgeView(0, -0.12);
-            else if (view === 'down') viewer.nudgeView(0, 0.12);
-            else if (view === 'zoom-in') viewer.zoomBy(0.8);
-            else if (view === 'zoom-out') viewer.zoomBy(1.25);
-        };
-        document.querySelectorAll('.sim3d-nav__btn').forEach((btn) => {
-            btn.addEventListener('pointerdown', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                applyView(btn.dataset.view);
-                let timer = 0;
-                const start = window.setTimeout(() => {
-                    timer = window.setInterval(() => applyView(btn.dataset.view), 90);
-                }, 280);
-                const stop = () => {
-                    window.clearTimeout(start);
-                    window.clearInterval(timer);
-                    window.removeEventListener('pointerup', stop);
-                    window.removeEventListener('pointercancel', stop);
-                };
-                window.addEventListener('pointerup', stop);
-                window.addEventListener('pointercancel', stop);
-            });
         });
 
         playBtn.addEventListener('click', () => {
             const playing = viewer.togglePlay();
             playBtn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+            playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
             playIcon.className = playing ? 'fas fa-pause' : 'fas fa-play';
             playLabel.textContent = playing ? 'Pause' : 'Play';
         });
 
-        document.getElementById('sim3dRewind').addEventListener('click', () => {
-            viewer.setProgress(0);
-        });
+        $('sim3dRewind').addEventListener('click', () => viewer.setProgress(0));
 
         document.querySelectorAll('.sim3d-speeds [data-speed]').forEach((btn) => {
             btn.addEventListener('click', () => {
@@ -501,8 +460,48 @@
             });
         });
 
+        labelsBtn.addEventListener('click', () => {
+            const on = labelsBtn.getAttribute('aria-pressed') !== 'true';
+            labelsBtn.setAttribute('aria-pressed', String(on));
+            viewer.setLabelsVisible(on);
+        });
+
+        resetBtn.addEventListener('click', () => viewer.resetView());
+
+        /* Full screen: only the village and its controls */
+        const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement;
+        if (!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) {
+            fullBtn.hidden = true;
+        }
+        fullBtn.addEventListener('click', () => {
+            if (fsElement()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+            else (stage.requestFullscreen || stage.webkitRequestFullscreen).call(stage);
+        });
+        const onFullscreenChange = () => {
+            const on = fsElement() === stage;
+            stage.classList.toggle('is-fullscreen', on);
+            fullBtn.setAttribute('aria-pressed', String(on));
+            fullBtn.querySelector('i').className = on ? 'fas fa-compress' : 'fas fa-expand';
+            fullBtn.querySelector('span').textContent = on ? 'Exit full screen' : 'Full screen';
+            viewer.resize();
+        };
+        document.addEventListener('fullscreenchange', onFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+
+        /* Tuck the sticky mobile donate bar away while the village is on screen */
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver((entries) => {
+                document.body.classList.toggle('sim-in-view', entries[entries.length - 1].isIntersecting);
+            }, { threshold: 0.3 }).observe($('sim3dViewport'));
+        }
+
         scrub.addEventListener('pointerdown', () => { scrubbing = true; });
-        scrub.addEventListener('pointerup', () => { scrubbing = false; });
+        // Release on any of these, so a drag that ends off the slider (or a cancelled touch) can't leave it stuck
+        const endScrub = () => { scrubbing = false; };
+        scrub.addEventListener('pointerup', endScrub);
+        scrub.addEventListener('pointercancel', endScrub);
+        scrub.addEventListener('change', endScrub);
+        window.addEventListener('pointerup', endScrub);
         scrub.addEventListener('input', () => {
             viewer.setProgress(+scrub.value / 1000);
         });
