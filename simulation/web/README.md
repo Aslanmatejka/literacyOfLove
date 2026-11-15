@@ -6,4 +6,10 @@
 & ".\tools\blender-4.2.9-windows-x64\blender.exe" --background ".\output\kids_daily_routine_updated.blend" --python ".\scripts\export_web_scene_baked.py"
 ```
 
+After every export, shrink the embedded textures (kid maps 2048 → 512 px, PNG → JPEG; ~24 MB → ~8 MB). Geometry and animation are untouched, and it is safe to re-run:
+
+```powershell
+node simulation/web/optimize-scene.mjs
+```
+
 Schedule: `schedule.json` (from `data/daily_schedule.json`).
