@@ -1,0 +1,15 @@
+# Browser caching rules for Netlify.
+# Pages, styles.css and the site's own scripts keep Netlify's default
+# (re-checked on every visit), so edits show up straight away.
+
+# Third-party libraries live in version-named folders and never change.
+/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Photos: reuse for a day, then refresh quietly in the background.
+/images/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# The 3D village scene (re-checked daily, same as photos).
+/simulation/web/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

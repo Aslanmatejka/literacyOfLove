@@ -9,15 +9,31 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
-      }
-    }
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"></noscript>
+    <link rel="stylesheet" href="vendor/fontawesome-6.0.0/css/all.min.css">
+    <!-- Start the 3D village downloads right away, in parallel with the page -->
+    <link rel="modulepreload" href="vendor/three-r170/three.module.min.js">
+    <link rel="modulepreload" href="sim-viewer.js">
+    <link rel="modulepreload" href="sim-countryside.js">
+    <link rel="modulepreload" href="sim-animals.js">
+    <script>
+        // Fetch the compressed scene early, but only on browsers that can unpack and draw it
+        (function () {
+            try {
+                var c = document.createElement('canvas');
+                var gl = window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'));
+                var lose = gl && gl.getExtension('WEBGL_lose_context');
+                if (lose) lose.loseContext(); // only a test: free it straight away
+                if (!gl || typeof DecompressionStream !== 'function') return;
+                var l = document.createElement('link');
+                l.rel = 'preload';
+                l.as = 'fetch';
+                l.crossOrigin = 'anonymous';
+                l.href = 'simulation/web/assets/scene.glb.gz';
+                document.head.appendChild(l);
+            } catch (e) { /* the viewer fetches it later anyway */ }
+        })();
     </script>
 </head>
 
@@ -111,7 +127,7 @@
                     <canvas id="sim3dCanvas" tabindex="0" aria-label="3D village. Drag to look around, scroll or pinch to zoom, right-drag to move. With the keyboard: arrow keys move, Shift plus arrow keys turn, plus and minus zoom."></canvas>
                     <div class="sim3d-loading" id="sim3dLoading">
                         <div class="sim3d-loading__spin" aria-hidden="true"></div>
-                        <p>Loading the village&hellip;<br><small>~8&nbsp;MB first load</small></p>
+                        <p>Loading the village&hellip;<br><small>~3&nbsp;MB first load</small></p>
                     </div>
                     <p class="sim3d-hint" id="sim3dHint" aria-hidden="true"><i class="fas fa-hand-pointer" aria-hidden="true"></i> Drag to look around &middot; Scroll or pinch to zoom</p>
                 </div>
@@ -355,7 +371,24 @@
             $('sim3dLoading').querySelector('p').textContent = message;
         };
 
-        // Three.js comes from a CDN; if it can't be reached, say so instead of spinning forever
+        // Some older phones and locked-down computers can't draw 3D at all: say so plainly
+        const canDraw3D = (() => {
+            try {
+                const c = document.createElement('canvas');
+                const gl = window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'));
+                const lose = gl && gl.getExtension('WEBGL_lose_context');
+                if (lose) lose.loseContext(); // only a test: free it straight away
+                return !!gl;
+            } catch (err) {
+                return false;
+            }
+        })();
+        if (!canDraw3D) {
+            showLoadError('This device can’t show the 3D village. You can still watch the village stories below.');
+            await new Promise(() => {}); // stop here quietly: nothing else on this page needs 3D
+        }
+
+        // If the 3D code can't be fetched, say so instead of spinning forever
         let SimViewer;
         try {
             ({ SimViewer } = await import('./sim-viewer.js'));
@@ -389,9 +422,22 @@
             cards.forEach((card, kidId) => card.btn.classList.toggle('is-active', kidId === id));
         };
 
-        const viewer = new SimViewer(canvas, {
+        // Download progress in the loading box
+        const loadingNote = loading.querySelector('small');
+        const showProgress = (fraction, stage) => {
+            if (!loadingNote) return;
+            const text = stage === 'building'
+                ? 'Building the village…'
+                : `Downloading… ${Math.round(fraction * 100)}%`;
+            if (loadingNote.textContent !== text) loadingNote.textContent = text;
+        };
+
+        let viewer;
+        try {
+            viewer = new SimViewer(canvas, {
             scheduleUrl: 'simulation/web/schedule.json',
             onInteract: hideHint,
+            onProgress: showProgress,
             onReady({ kids, error }) {
                 if (error) {
                     showLoadError(`The 3D village could not load (${error}). Please refresh the page.`);
@@ -441,7 +487,12 @@
                     setText(card.act, k.activity);
                 });
             }
-        });
+            });
+        } catch (err) {
+            // e.g. the graphics driver refused to create a 3D canvas
+            showLoadError('The 3D village couldn’t start on this device. You can still watch the village stories below.');
+            throw err;
+        }
 
         playBtn.addEventListener('click', () => {
             const playing = viewer.togglePlay();

@@ -8,6 +8,8 @@
  *   - downsizes kid maps (images named "HQ_*") to 512 px, others to max 1024 px
  *   - re-encodes opaque PNGs as JPEG (quality 90) when that is smaller
  * Geometry, animation, materials and node names are left untouched.
+ * It also writes scene.glb.gz (~2 MB instead of ~8 MB), which the viewer
+ * downloads and unpacks in the browser.
  * Safe to re-run: images that are already small JPEGs are skipped.
  *
  * Windows only (uses the built-in System.Drawing via PowerShell; no npm deps).
@@ -21,6 +23,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import zlib from 'node:zlib';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_GLB = path.join(HERE, 'assets', 'scene.glb');
@@ -30,6 +33,13 @@ const JPEG_QUALITY = 90;
 
 const input = path.resolve(process.argv[2] || DEFAULT_GLB);
 const output = path.resolve(process.argv[3] || input);
+
+/** Gzipped copy next to the scene; always refreshed so it never goes stale. */
+function writeGzip(file) {
+  const gz = zlib.gzipSync(fs.readFileSync(file), { level: 9 });
+  fs.writeFileSync(`${file}.gz`, gz);
+  console.log(`${path.basename(file)}.gz: ${(gz.length / 1e6).toFixed(1)} MB (served compressed, unpacked in the browser)`);
+}
 
 /* ---------- GLB read ---------- */
 const glb = fs.readFileSync(input);
@@ -89,6 +99,8 @@ json.images.forEach((img, i) => {
 
 if (!jobs.length) {
   console.log('Nothing to optimize — textures are already small.');
+  if (output !== input) fs.copyFileSync(input, output);
+  writeGzip(output);
   fs.rmSync(tmp, { recursive: true, force: true });
   process.exit(0);
 }
@@ -152,6 +164,8 @@ for (const job of jobs) {
 fs.rmSync(tmp, { recursive: true, force: true });
 if (saved === 0 && !jobs.some((job) => job.needsResize)) {
   console.log('Nothing to optimize — textures are already small.');
+  if (output !== input) fs.copyFileSync(input, output);
+  writeGzip(output);
   process.exit(0);
 }
 
@@ -186,4 +200,5 @@ const result = Buffer.concat([header, ...chunk(jsonBuf, 'JSON'), ...chunk(binOut
 const tmpOut = `${output}.tmp`;
 fs.writeFileSync(tmpOut, result);
 fs.renameSync(tmpOut, output);
+writeGzip(output);
 console.log(`\n${path.basename(input)}: ${(glb.length / 1e6).toFixed(1)} MB -> ${(result.length / 1e6).toFixed(1)} MB (textures saved ${(saved / 1e6).toFixed(1)} MB)`);

@@ -9,8 +9,10 @@
     <link rel="stylesheet" href="styles.css?v=gallery-edu">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"></noscript>
+    <link rel="stylesheet" href="vendor/fontawesome-6.0.0/css/all.min.css">
 </head>
 
 <body>
@@ -77,95 +79,95 @@
             <!-- Grid -->
             <div class="gallery-grid" id="galleryGrid">
                 <figure class="gallery-item" data-category="children">
-                    <img src="images/children.jpg" alt="Children of the Family of the Heart together" loading="lazy">
+                    <img src="images/children.jpg" srcset="images/thumbs/children.jpg 600w, images/children.jpg 1500w" sizes="(max-width: 900px) 50vw, 25vw" alt="Children of the Family of the Heart together" loading="lazy">
                     <figcaption>Our Family of the Heart</figcaption>
                 </figure>
                 <figure class="gallery-item gallery-item--tall" data-category="children">
-                    <img src="images/family.jpg" alt="A family gathered together" loading="lazy">
+                    <img src="images/family.jpg" srcset="images/thumbs/family.jpg 800w, images/family.jpg 2000w" sizes="(max-width: 900px) 50vw, 25vw" alt="A family gathered together" loading="lazy">
                     <figcaption>One family, many hearts</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="children">
-                    <img src="images/edrick.jpg" alt="Edrick smiling" loading="lazy">
+                    <img src="images/edrick.jpg" srcset="images/thumbs/edrick.jpg 800w, images/edrick.jpg 1440w" sizes="(max-width: 900px) 50vw, 25vw" alt="Edrick smiling" loading="lazy">
                     <figcaption>Edrick</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="children">
-                    <img src="images/kudra.jpg" alt="Kudra" loading="lazy">
+                    <img src="images/kudra.jpg" srcset="images/thumbs/kudra.jpg 600w, images/kudra.jpg 1440w" sizes="(max-width: 900px) 50vw, 25vw" alt="Kudra" loading="lazy">
                     <figcaption>Kudra</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="children">
-                    <img src="images/rita.jpg" alt="Rita" loading="lazy">
+                    <img src="images/rita.jpg" srcset="images/thumbs/rita.jpg 600w, images/rita.jpg 750w" sizes="(max-width: 900px) 50vw, 25vw" alt="Rita" loading="lazy">
                     <figcaption>Rita</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="children">
-                    <img src="images/Titus.jpg" alt="Titus" loading="lazy">
+                    <img src="images/Titus.jpg" srcset="images/thumbs/Titus.jpg 800w, images/Titus.jpg 1920w" sizes="(max-width: 900px) 50vw, 25vw" alt="Titus" loading="lazy">
                     <figcaption>Titus</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="children">
-                    <img src="images/adam.jpg" alt="Adam" loading="lazy">
+                    <img src="images/adam.jpg" srcset="images/thumbs/adam.jpg 800w, images/adam.jpg 2048w" sizes="(max-width: 900px) 50vw, 25vw" alt="Adam" loading="lazy">
                     <figcaption>Adam</figcaption>
                 </figure>
 
                 <figure class="gallery-item gallery-item--wide" data-category="home">
-                    <img src="images/home.jpg" alt="The Heart — our children's home" loading="lazy">
+                    <img src="images/home.jpg" srcset="images/thumbs/home.jpg 800w, images/home.jpg 1920w" sizes="(max-width: 900px) 70vw, 50vw" alt="The Heart — our children's home" loading="lazy">
                     <figcaption>The Heart &mdash; our permanent home</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="home">
-                    <img src="images/home2.jpg" alt="The children's home" loading="lazy">
+                    <img src="images/home2.jpg" srcset="images/thumbs/home2.jpg 800w, images/home2.jpg 2000w" sizes="(max-width: 900px) 50vw, 25vw" alt="The children's home" loading="lazy">
                     <figcaption>A safe place to belong</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="home">
-                    <img src="images/20230706_180017.jpg" alt="A pig with her piglets" loading="lazy">
+                    <img src="images/20230706_180017.jpg" srcset="images/thumbs/20230706_180017.jpg 600w, images/20230706_180017.jpg 1440w" sizes="(max-width: 900px) 50vw, 25vw" alt="A pig with her piglets" loading="lazy">
                     <figcaption>A pig and her piglets</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="home">
-                    <img src="images/20230101_162815.jpg" alt="Moments at home" loading="lazy">
+                    <img src="images/20230101_162815.jpg" srcset="images/thumbs/20230101_162815.jpg 800w, images/20230101_162815.jpg 1920w" sizes="(max-width: 900px) 50vw, 25vw" alt="Moments at home" loading="lazy">
                     <figcaption>Together at home</figcaption>
                 </figure>
 
                 <figure class="gallery-item gallery-item--tall" data-category="education">
-                    <img src="images/education.jpg" alt="Children in school" class="gallery-focus-right" loading="lazy">
+                    <img src="images/education.jpg" srcset="images/thumbs/education.jpg 800w, images/education.jpg 2000w" sizes="(max-width: 900px) 50vw, 25vw" alt="Children in school" class="gallery-focus-right" loading="lazy">
                     <figcaption>Education changes everything</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="education">
-                    <img src="images/books.jpg" alt="School books" loading="lazy">
+                    <img src="images/books.jpg" srcset="images/thumbs/books.jpg 800w, images/books.jpg 2000w" sizes="(max-width: 900px) 50vw, 25vw" alt="School books" loading="lazy">
                     <figcaption>The gift of learning</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="education">
-                    <img src="images/educationalmaterial.jpg" alt="Educational materials" loading="lazy">
+                    <img src="images/educationalmaterial.jpg" srcset="images/thumbs/educationalmaterial.jpg 800w, images/educationalmaterial.jpg 1600w" sizes="(max-width: 900px) 50vw, 25vw" alt="Educational materials" loading="lazy">
                     <figcaption>Tools to grow</figcaption>
                 </figure>
 
                 <figure class="gallery-item" data-category="community">
-                    <img src="images/farm.jpg" alt="The farm" loading="lazy">
+                    <img src="images/farm.jpg" srcset="images/thumbs/farm.jpg 800w, images/farm.jpg 2048w" sizes="(max-width: 900px) 50vw, 25vw" alt="The farm" loading="lazy">
                     <figcaption>Our acre of farmland</figcaption>
                 </figure>
                 <figure class="gallery-item gallery-item--wide" data-category="community">
-                    <img src="images/maiz-mill.jpg" alt="The maize mill" loading="lazy">
+                    <img src="images/maiz-mill.jpg" srcset="images/thumbs/maiz-mill.jpg 800w, images/maiz-mill.jpg 1920w" sizes="(max-width: 900px) 70vw, 50vw" alt="The maize mill" loading="lazy">
                     <figcaption>The maize mill &mdash; sustainability in action</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="community">
-                    <img src="images/20240228_105614.jpg" alt="Community gathering" loading="lazy">
+                    <img src="images/20240228_105614.jpg" srcset="images/thumbs/20240228_105614.jpg 600w, images/20240228_105614.jpg 1440w" sizes="(max-width: 900px) 50vw, 25vw" alt="Community gathering" loading="lazy">
                     <figcaption>Community comes together</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="community">
-                    <img src="images/20230310_113542.jpg" alt="Community project" loading="lazy">
+                    <img src="images/20230310_113542.jpg" srcset="images/thumbs/20230310_113542.jpg 800w, images/20230310_113542.jpg 1920w" sizes="(max-width: 900px) 50vw, 25vw" alt="Community project" loading="lazy">
                     <figcaption>Building a future together</figcaption>
                 </figure>
 
                 <figure class="gallery-item gallery-item--tall" data-category="crafts">
-                    <img src="images/ugandancrafts.jpg" alt="Handmade Ugandan crafts" loading="lazy">
+                    <img src="images/ugandancrafts.jpg" srcset="images/thumbs/ugandancrafts.jpg 800w, images/ugandancrafts.jpg 1600w" sizes="(max-width: 900px) 50vw, 25vw" alt="Handmade Ugandan crafts" loading="lazy">
                     <figcaption>Handmade Ugandan crafts</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="crafts">
-                    <img src="images/Tshed pottery 2.jpg" alt="Handmade pottery" loading="lazy">
+                    <img src="images/Tshed pottery 2.jpg" srcset="images/thumbs/Tshed pottery 2.jpg 600w, images/Tshed pottery 2.jpg 629w" sizes="(max-width: 900px) 50vw, 25vw" alt="Handmade pottery" loading="lazy">
                     <figcaption>Pottery from our artisans</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="crafts">
-                    <img src="images/gifts.jpg" alt="Handcrafted gifts" loading="lazy">
+                    <img src="images/gifts.jpg" srcset="images/thumbs/gifts.jpg 800w, images/gifts.jpg 1920w" sizes="(max-width: 900px) 50vw, 25vw" alt="Handcrafted gifts" loading="lazy">
                     <figcaption>Gifts that give back</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="crafts">
-                    <img src="images/latins.jpg" alt="Artisan goods" loading="lazy">
+                    <img src="images/latins.jpg" srcset="images/thumbs/latins.jpg 539w, images/latins.jpg 934w" sizes="(max-width: 900px) 50vw, 25vw" alt="Artisan goods" loading="lazy">
                     <figcaption>NorthStarToursAndTravel</figcaption>
                 </figure>
             </div>

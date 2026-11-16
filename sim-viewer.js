@@ -7,11 +7,11 @@
  * scroll/pinch, right-drag), drifts slowly around the village when idle,
  * and the sky, sun and shadows follow the time of day.
  */
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+import * as THREE from './vendor/three-r170/three.module.min.js';
+import { OrbitControls } from './vendor/three-r170/addons/controls/OrbitControls.js';
+import { GLTFLoader } from './vendor/three-r170/addons/loaders/GLTFLoader.js';
+import { mergeGeometries } from './vendor/three-r170/addons/utils/BufferGeometryUtils.js';
+import { CSS2DRenderer, CSS2DObject } from './vendor/three-r170/addons/renderers/CSS2DRenderer.js';
 import { buildCountryside } from './sim-countryside.js';
 
 const SCENE_URL = 'simulation/web/assets/scene.glb';
@@ -102,6 +102,8 @@ export class SimViewer {
     this.scheduleUrl = opts.scheduleUrl || SCHEDULE_URL;
     this.onTick = opts.onTick || (() => {});
     this.onReady = opts.onReady || (() => {});
+    /** (fraction 0–1, stage) while the scene downloads; stage 'building' once it's in */
+    this.onProgress = opts.onProgress || (() => {});
 
     this.playing = true;
     this.speed = 1;
@@ -1087,6 +1089,62 @@ export class SimViewer {
     console.info('[SimViewer] path clips', pathClips.length, 'dur', this.clipDuration);
   }
 
+  /**
+   * Download the village scene. A gzipped copy (scene.glb.gz, ~2 MB instead
+   * of ~8 MB) is unpacked in the browser; if anything about that fails (an
+   * older browser, a proxy that already unpacked it, a network error) the
+   * plain scene.glb is loaded instead.
+   */
+  async _fetchScene() {
+    const loader = new GLTFLoader();
+    const base = this.sceneUrl.slice(0, this.sceneUrl.lastIndexOf('/') + 1);
+    if (typeof DecompressionStream === 'function' && !this._skipGzip) {
+      try {
+        const res = await fetch(`${this.sceneUrl}.gz`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const total = Number(res.headers.get('content-length')) || 0;
+        let bytes;
+        if (res.body && total) {
+          const reader = res.body.getReader();
+          const chunks = [];
+          let loaded = 0;
+          for (;;) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            loaded += value.byteLength;
+            this.onProgress(Math.min(1, loaded / total));
+          }
+          bytes = new Uint8Array(loaded);
+          let at = 0;
+          chunks.forEach((c) => { bytes.set(c, at); at += c.byteLength; });
+        } else {
+          bytes = new Uint8Array(await res.arrayBuffer());
+        }
+        let data = bytes.buffer;
+        if (bytes[0] === 0x1f && bytes[1] === 0x8b) { // gzip: unpack it here
+          data = await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+        }
+        return await loader.parseAsync(data, base);
+      } catch (err) {
+        console.warn('[SimViewer] compressed scene unavailable, loading the plain file', err);
+      }
+    }
+    return loader.loadAsync(this.sceneUrl, (e) => {
+      if (e.lengthComputable && e.total) this.onProgress(Math.min(1, e.loaded / e.total));
+    });
+  }
+
+  /** Optional extras must never take the village down with them. */
+  _safely(label, fn) {
+    try {
+      return fn();
+    } catch (err) {
+      console.warn(`[SimViewer] ${label} skipped`, err);
+      return null;
+    }
+  }
+
   async _load() {
     try {
       const [schedRes, gltf] = await Promise.all([
@@ -1094,8 +1152,9 @@ export class SimViewer {
           if (!r.ok) throw new Error(`Schedule failed to load (HTTP ${r.status})`);
           return r.json();
         }),
-        new GLTFLoader().loadAsync(this.sceneUrl),
+        this._fetchScene(),
       ]);
+      this.onProgress(1, 'building');
       this.schedule = schedRes;
       this.meta = schedRes.meta;
       this.fps = this.meta.fps || 24;
@@ -1150,21 +1209,23 @@ export class SimViewer {
       // Measure places and copy the hut/tree models before merging
       // (merging empties the LOC_* groups)
       const places = this._measurePlaces(root);
-      const props = this._captureProps(root);
-      this._mergeStatic(root);
-      this._buildLabels(places);
-      if (props.hut) {
+      const props = this._safely('copying the hut and tree models', () => this._captureProps(root));
+      this._safely('merging static meshes', () => this._mergeStatic(root));
+      this._safely('labels', () => this._buildLabels(places));
+      if (props && props.hut) {
         // Roads, homesteads, farms, forests, swamps and animals around the village
         const t0 = performance.now();
-        this.countryside = buildCountryside({
+        this.countryside = this._safely('countryside', () => buildCountryside({
           scene: this.scene,
           center: this.villageCenter,
           roadRoutes: this.roadRoutes,
           places,
           props,
           lite: this.lite,
-        });
-        console.info(`[SimViewer] countryside built in ${Math.round(performance.now() - t0)} ms`, JSON.stringify(this.countryside.stats));
+        }));
+        if (this.countryside) {
+          console.info(`[SimViewer] countryside built in ${Math.round(performance.now() - t0)} ms`, JSON.stringify(this.countryside.stats));
+        }
       }
       this._frameVillage(true);
       this._updateDaylight(this.dayHour);
@@ -1190,6 +1251,7 @@ export class SimViewer {
     } catch (e) {
       if (!this._loadRetried && !this._sceneMounted) {
         this._loadRetried = true;
+        this._skipGzip = true; // second try: the plain file
         console.warn('[SimViewer] scene load failed, retrying', e);
         return this._load();
       }

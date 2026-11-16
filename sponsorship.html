@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"></noscript>
+    <link rel="stylesheet" href="vendor/fontawesome-6.0.0/css/all.min.css">
 </head>
 <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -70,7 +71,7 @@
             <div class="story-grid">
                 <div class="story-card">
                     <div class="story-image">
-                        <img src="images/titus2.jpg" alt="Titus">
+                        <img loading="lazy" decoding="async" src="images/titus2.jpg" alt="Titus">
                     </div>
                     <div class="story-content">
                         <h3>Meet a Future Leader!</h3>
@@ -82,7 +83,7 @@
 
                 <div class="story-card">
                     <div class="story-image">
-                        <img src="images/Ssembatya.jpg" alt="Ssembatya">
+                        <img loading="lazy" decoding="async" src="images/Ssembatya.jpg" alt="Ssembatya">
                     </div>
                     <div class="story-content">
                         <h3>Meet Ssembatya</h3>
@@ -247,7 +248,7 @@
                     <p>We have worked very hard to keep costs low, and our fees are ONLY a reflection of the bare minimum needed to raise and educate a child. Schools make personal requirements compulsory. These items include such things as paper, notebooks, test fees, uniforms, pens, toilet paper, toothpaste, bathing and washing soap, etc.</p>
                 </div>
                 <div class="connection-image">
-                    <img src="images/edrick2.jpg" alt="Children writing letters">
+                    <img loading="lazy" decoding="async" src="images/edrick2.jpg" alt="Children writing letters">
                 </div>
             </div>
         </div>
@@ -308,7 +309,7 @@
         <div class="container">
             <h2 class="section-title">Share Our Story</h2>
             <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/-QURzo8PAzI"
+                <iframe loading="lazy" src="https://www.youtube.com/embed/-QURzo8PAzI"
                         title="Share Our Story"
                         frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

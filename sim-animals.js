@@ -10,8 +10,8 @@
  * draw call (legs included: one instance per leg), and the joints are just a
  * few matrix multiplies per animal per frame.
  */
-import * as THREE from 'three';
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import * as THREE from './vendor/three-r170/three.module.min.js';
+import { mergeGeometries } from './vendor/three-r170/addons/utils/BufferGeometryUtils.js';
 
 const TAU = Math.PI * 2;
 const UP = new THREE.Vector3(0, 1, 0);

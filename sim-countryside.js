@@ -10,8 +10,8 @@
  * however many copies), and each kind of road, path, field or swamp is one
  * merged mesh. The layout is seeded, so it is the same on every visit.
  */
-import * as THREE from 'three';
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import * as THREE from './vendor/three-r170/three.module.min.js';
+import { mergeGeometries } from './vendor/three-r170/addons/utils/BufferGeometryUtils.js';
 import { AnimalGroup, SPECIES } from './sim-animals.js';
 
 /* ------------------------------------------------------------------ */
